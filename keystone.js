@@ -14,6 +14,8 @@ keystone.init({
 	// Showed on top left admin panel
 	'brand': 'Tangelo',
 
+	'login-requireables': ['name', 'password'],
+
 	'less': 'public',
 	'static': 'public',
 	'favicon': 'public/favicon.ico',

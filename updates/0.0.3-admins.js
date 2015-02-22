@@ -14,6 +14,11 @@ exports.create = {
 		'email': 'user@keystonejs.com',
 		'password': 'admin',
 		'isAdmin': true
+	},
+	{
+		'email': 'asd@qwe.zxc',
+		'password': 'admin',
+		'isAdmin': true
 	}]
 };
 
