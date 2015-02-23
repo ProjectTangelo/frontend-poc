@@ -2,16 +2,16 @@ var keystone = require('keystone');
 
 exports = module.exports = function (req, res) {
 
-  res.clearCookie('keystone.uid');
+  res.clearCookie(keystone.get('cookie name'));
   req.user = null;
 
   req.session.regenerate(function () {
-    if (typeof keystone.get('signout redirect') === 'string') {
+    if (typeof keystone.get('signout redirect') === 'string')
       return res.redirect(keystone.get('signout redirect'));
-    }
-    if (typeof keystone.get('signout redirect') === 'function') {
+
+    if (typeof keystone.get('signout redirect') === 'function')
       return keystone.get('signout redirect')(req, res);
-    }
-    return res.redirect('/keystone');
+
+    return res.redirect('/');
   });
 };

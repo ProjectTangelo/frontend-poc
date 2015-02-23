@@ -14,6 +14,8 @@ keystone.init({
 	// Showed on top left admin panel
 	'brand': 'Tangelo',
 
+	// not sure you can change this
+	'cookie name': 'keystone.sid',
 	'login-requireables': ['name', 'password'],
 
 	'less': 'public',

@@ -29,7 +29,7 @@ keystone.pre('render', middleware.flashMessages);
 // Import Route Controllers
 var routes = {
 	views: importRoutes('./views'),
-	auth: require('./authenticate')
+	api: importRoutes('./apis')
 };
 
 // Setup Route Bindings
@@ -37,9 +37,9 @@ exports = module.exports = function(app) {
 
 	// Views
 	app.get('/', routes.views.index);
-	
+
 	app.get('/signin', routes.views.signin);
-	app.post('/signin', routes.auth);
+	app.post('/signin', routes.api.authenticate);
 	app.get('/signout', routes.views.signout);
 
 	app.get('/admin', middleware.requireUser, routes.views.admin);

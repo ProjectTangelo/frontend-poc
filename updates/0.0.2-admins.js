@@ -9,14 +9,14 @@
 
 exports.create = {
 	User: [{
-		'name.first': 'Admin',
-		'name.last': 'User',
+		'name': 'admin',
 		'email': 'user@keystonejs.com',
 		'password': 'admin',
 		'isAdmin': true
 	},
 	{
 		'email': 'asd@qwe.zxc',
+		'name': 'asd',
 		'password': 'admin',
 		'isAdmin': true
 	}]

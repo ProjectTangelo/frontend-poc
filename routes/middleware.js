@@ -9,6 +9,7 @@
  */
 
 var _ = require('lodash');
+var keystone = require('keystone');
 
 
 /**
@@ -28,6 +29,11 @@ exports.initLocals = function (req, res, next) {
 		key: 'home',
 		href: '/'
 	}];
+
+
+	locals.csrf_token_key = keystone.security.csrf.TOKEN_KEY,
+	locals.csrf_token_value = keystone.security.csrf.getToken(req, res),
+	locals.csrf_query = '&' + keystone.security.csrf.TOKEN_KEY + '=' + keystone.security.csrf.getToken(req, res),
 
 	locals.user = req.user;
 
@@ -63,7 +69,6 @@ exports.flashMessages = function (req, res, next) {
  */
 
 exports.requireUser = function (req, res, next) {
-
 	if (!req.user) {
 		req.flash('error', 'Please sign in to access this page.');
 		res.redirect('/signin');
@@ -71,5 +76,14 @@ exports.requireUser = function (req, res, next) {
 	else {
 		next();
 	}
-
 };
+
+exports.requireAdmin = function (req, res, next) {
+	if (!req.user && !req.user.isAdmin) {
+		// req.flash('error', 'Please sign in to access this page.');
+		res.redirect('/')
+	}
+	else {
+		next();
+	}
+}
