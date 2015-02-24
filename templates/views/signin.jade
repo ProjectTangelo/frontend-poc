@@ -13,7 +13,7 @@ block content
           a(href='/keystone/signout').btn.btn-cancel Sign out
       
       else
-        form(method="post", novalidate).auth-form
+        form(action="login" method="post", novalidate).auth-form
           input(type='hidden', name=csrf_token_key, value=csrf_token_value)
           .form-group
             label(for='name') Name
