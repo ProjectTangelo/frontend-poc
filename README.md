@@ -23,5 +23,5 @@ sudo npm install
 Once you have downloaded the repository and submodules and installed all packages, you can run the server by running the following command at the project's root directory.
 
 ```
-node keystone.js
+npm start
 ```
