@@ -1,3 +1,4 @@
 [submodule "public/tangelo-angular"]
 	path = public/tangelo-angular
 	url = https://github.com/ProjectTangelo/tangelo-angular.git
+	branch = frontend-poc
