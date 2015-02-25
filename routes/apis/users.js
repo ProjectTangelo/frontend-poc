@@ -53,7 +53,7 @@ exports = module.exports = {
       flashErrors: true,
       logErrors: true,
       fields: users.initialFields
-    }, function(err) {
+    }, function (err) {
       if (err) {
         return res.json({
           success: false,
@@ -70,6 +70,11 @@ exports = module.exports = {
   },
   'update': function (req, res) {
     var id = req.query.id;
+    if (!id)
+      sendError('Missing ID field.');
+
+    var data = req.query;
+    delete data.id;
 
     users.model.findById(id).exec(function (err, item) {
       if (err)
@@ -77,7 +82,21 @@ exports = module.exports = {
       if (!item)
         return sendError('not found');
 
+      item.getUpdateHandler(req).process(data, {
+        flashErrors: true,
+        logErrors: true
+      }, function(err) {
+        if (err) {
+          return sendError(err);
+        }
+        return res.json({
+          success: true,
+          item: item
+        });
+      });
     });
+
+
   },
   'delete': function (req, res) {
     if (users.get('nodelete'))

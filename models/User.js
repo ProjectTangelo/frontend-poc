@@ -9,8 +9,14 @@ var Types = keystone.Field.Types;
 var User = new keystone.List('User');
 
 User.add({
-  name: {
+  username: {
     type: Types.Text,
+    initial: true,
+    required: true,
+    index: true
+  },
+  name: {
+    type: Types.Name,
     initial: true,
     required: true,
     index: true
@@ -62,5 +68,5 @@ User.schema.virtual('canAccessKeystone').get(function () {
  * Registration
  */
 
-User.defaultColumns = 'name, email, isAdmin';
+User.defaultColumns = 'username, name, email, isAdmin';
 User.register();
