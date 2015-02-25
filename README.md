@@ -4,7 +4,7 @@
 
 Get the code using this git command. It will not only clone the repository, but initialize the git submodules.
 ```
-git clone --recursive https://github.com/chaconinc/MainProject
+git clone --recursive https://github.com/ProjectTangelo/frontend-poc.git
 ```
 
 ## Install
