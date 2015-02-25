@@ -44,7 +44,11 @@ exports = module.exports = function(app) {
 
   // apis
   app.post('/login', routes.api.authenticate);
+
   app.get('/users', routes.api.users.get);
+  app.post('/users', routes.api.users.create);
+  app.put('/users', routes.api.users.update);
+  app.delete('/users', routes.api.users.delete);
 
   // NOTE: To protect a route so that only admins can see it, use the requireUser middleware:
   // app.get('/protected', middleware.requireUser, routes.views.protected);

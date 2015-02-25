@@ -87,3 +87,26 @@ exports.requireAdmin = function (req, res, next) {
     next();
   }
 }
+
+exports.requireCSRF = function (req, res, next) {
+  if (!keystone.security.csrf.validate(req)) {
+    res.json({
+      error: 'Invalid token.'
+    });
+  }
+  else
+    next();
+}
+
+// exports.initList = function(list, protect) {
+//   return function(req, res, next) {
+//     req.list = keystone.list(list);
+//     if (!req.list || (protect && req.list.get('hidden'))) {
+//       // debug('could not find list ', req.params.list);
+//       req.flash('error', 'List ' + req.params.list + ' could not be found.');
+//       return res.redirect('/keystone');
+//     }
+//     // debug('getting list ', req.params.list);
+//     next();
+//   }
+// }
