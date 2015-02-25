@@ -79,12 +79,12 @@ exports.requireUser = function (req, res, next) {
 };
 
 exports.requireAdmin = function (req, res, next) {
-  if (!req.user || !req.user.isAdmin) {
+  if (req.user && req.user.isAdmin) {
     // req.flash('error', 'Please sign in to access this page.');
-    res.redirect('/')
+    next();
   }
   else {
-    next();
+    res.redirect('/')
   }
 }
 
