@@ -82,7 +82,7 @@ exports = module.exports = function (req, res) {
     return render('signin');
   }
   // check that they inputted the required login information
-  if (!req.body.name || !req.body.password) {
+  if (!req.body.username || !req.body.password) {
     req.flash('error', 'Please enter your login information.');
     return render('signin');
   }
