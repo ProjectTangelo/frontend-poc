@@ -55,7 +55,7 @@ function signin (login, req, res, onSuccess, onFail) {
         'name': login.name
       })
     .exec(function (err, user) {
-      console.log(err, user);
+      // console.log(err, user);
       if (user) {
         return user._.password.compare(login.password, function (err, isMatch) {
           if (!err && isMatch) {
