@@ -35,6 +35,7 @@ exports = module.exports = {
     var item = new users.model();
     var updateHandler = item.getUpdateHandler(req);
     var data = {
+      username: req.query.username,
       name: req.query.name,
       email: req.query.email,
       password: req.query.password,
