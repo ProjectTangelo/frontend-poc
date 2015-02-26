@@ -8,12 +8,12 @@ git clone --recursive https://github.com/ProjectTangelo/frontend-poc.git
 ```
 
 ## Install
-After you have cloned the repository with the previous command, install all the packages through npm (Node Package Manager) with the following command.
+After you have cloned the repository with the previous command, install all the packages through NPM (Node Package Manager) with the following command.
 ```
 npm install
 ```
 
-Note that if you are on linux, you might need to enable sudo access to install some of the packages. You can do this with by prepending ```sudo``` to the previous command as shown below.
+Note that if you are on Linux, you might need to enable sudo access to install some of the packages. You can do this with by prepending ```sudo``` to the previous command as shown below.
 
 ```
 sudo npm install
