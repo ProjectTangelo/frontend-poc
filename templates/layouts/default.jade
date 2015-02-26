@@ -39,7 +39,7 @@ html
 		//- HEADER
 		div#header: .container
 
-			//- Customise your site's navigation by changing the navLinks Array in ./routes/middleware.js
+			//- Customise your sites navigation by changing the navLinks Array in ./routes/middleware.js
 			//- ... or completely change this header to suit your design.
 
 			div.navbar.navbar-default(role="navigation")
@@ -59,6 +59,9 @@ html
 							if user
 								if user.canAccessKeystone
 									li: a(href='/keystone') Open Keystone
+								
+								//- Displays the name of the user and links to the profile page editor.
+								li: a(href='/') #{user.name.first} #{user.name.last}
 								li: a(href='/keystone/signout') Sign Out
 							else
 								li: a(href='/keystone/signin') Sign In
@@ -77,14 +80,14 @@ html
 			//- validation errors, success messages, etc.
 			+flash-messages(messages)
 
-			//- The content block should contain the body of your template's content
+			//- The content block should contain the body of your templates content
 			block content
 
 
 		//- FOOTER
 		div#footer: .container
 
-			//- You don't _have_ to include a link saying your site is powered by KeystoneJS, but we appreciate it!
+			//- You dont _have_ to include a link saying your site is powered by KeystoneJS, but we appreciate it!
 			p Powered by <a href="http://keystonejs.com" target="_blank">KeystoneJS</a>.
 
 
