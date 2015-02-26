@@ -58,13 +58,19 @@ html
 						ul.nav.navbar-nav.navbar-right
 							if user
 								if user.canAccessKeystone
-									li: a(href='/keystone') Open Keystone
+									//- li: a(href='/keystone') Open Keystone
+									li: a(href='/admin') Admin Panel
 								
 								//- Displays the name of the user and links to the profile page editor.
-								li: a(href='/') #{user.name.first} #{user.name.last}
+								
+								if user.username
+									li: a(href='/') #{user.username}
+								else
+									li: a(href='/') #{user.name.first} #{user.name.last}
 								li: a(href='/keystone/signout') Sign Out
 							else
-								li: a(href='/keystone/signin') Sign In
+								//- li: a(href='/keystone/signin') Sign In
+								li: a(href='signin') Sign In
 
 		//- BODY
 		div#body
