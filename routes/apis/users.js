@@ -89,6 +89,7 @@ exports = module.exports = {
         if (err) {
           return sendError(err);
         }
+
         return res.json({
           success: true,
           item: item
