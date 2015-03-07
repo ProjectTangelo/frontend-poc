@@ -21,7 +21,7 @@
     "npm": ">=1.3.14"
   },
   "scripts": {
-    "start": "node keystone.js"
+    "start": "node server.js"
   },
-  "main": "keystone.js"
+  "main": "server.js"
 }
