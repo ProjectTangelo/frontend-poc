@@ -20,7 +20,7 @@ passport.use(new LocalStrategy(function (username, password, callback) {
 
   // callback hell, you say? Too bad. Maybe promises later...
   app.service('user').findByUsername(username, function (err, user) {
-    console.log(err, user);
+    // console.log(err, user);
     if (err) {
       return callback(err);
     }
@@ -35,7 +35,7 @@ passport.use(new LocalStrategy(function (username, password, callback) {
     user = user[0];
 
     util.matches(password, user.password, function (err, matches) {
-      console.log(err, matches);
+      // console.log(err, matches);
       if (err) {
         return callback(err);
       }
@@ -58,7 +58,7 @@ exports = module.exports = function (req, res) {
   }
 
   passport.authenticate('local', function (err, user, info) {
-    console.log('hello from authenticate', err, user, info);
+    // console.log('hello from authenticate', err, user, info);
 
     if (err) {
       return sendError(info);
@@ -66,8 +66,8 @@ exports = module.exports = function (req, res) {
     if (!user) {
       return sendError(info);
     }
-    req.logIn(user, function (err) {
-      console.log('hello from login', err);
+    req.login(user, function (err) {
+      // console.log('hello from login', err);
       if (err) {
         return sendError(err.toString());
       }
