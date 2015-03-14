@@ -16,7 +16,7 @@ passport.deserializeUser(function(id, callback) {
 
 
 passport.use(new LocalStrategy(function (username, password, callback) {
-  console.log('hello from localstrategy', username, password);
+  // console.log('hello from localstrategy', username, password);
 
   // callback hell, you say? Too bad. Maybe promises later...
   app.service('user').findByUsername(username, function (err, user) {
@@ -24,15 +24,11 @@ passport.use(new LocalStrategy(function (username, password, callback) {
     if (err) {
       return callback(err);
     }
-    if (user.length === 0) {
+    if (!user) {
       return callback(null, false, {
         message: 'User ' + username + ' not found'
       });
     }
-    if (user.length > 1) {
-      console.warn('Multiple users found with the same username (should never happen): ' + user);
-    }
-    user = user[0];
 
     util.matches(password, user.password, function (err, matches) {
       // console.log(err, matches);
