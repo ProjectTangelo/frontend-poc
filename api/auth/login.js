@@ -11,7 +11,12 @@ passport.serializeUser(function(user, callback) {
 
 passport.deserializeUser(function(id, callback) {
   // console.log('deserializeuser', id);
-    app.service('user').get(id, {}, callback);
+  var params = {
+    query: {
+      fields: '_id username type email'
+    }
+  }
+  app.service('user').get(id, {}, callback);
 });
 
 
@@ -47,11 +52,18 @@ passport.use(new LocalStrategy(function (username, password, callback) {
 
 
 exports = module.exports = function (req, res) {
-  function sendError(error) {
+  var sendError = function (error) {
     res.json({
       'error': error
     });
   }
+
+  if (req.user) {
+    return sendError({
+      message: 'You are already logged in'
+    });
+  }
+
 
   passport.authenticate('local', function (err, user, info) {
     // console.log('hello from authenticate', err, user, info);

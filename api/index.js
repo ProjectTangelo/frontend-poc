@@ -1,13 +1,9 @@
 var app = require('../tangelo');
-var requireDirectory = require('require-directory');
-var routes = requireDirectory(module);
 
-// console.log('ayy', routes.user);
+app.service('/user', require('./user'));
 
-app.service('/user', routes.user);
-
-app.post('/login', routes.auth.login);
-app.post('/logout', routes.auth.logout);
+app.post('/login', require('./auth/login'));
+app.post('/logout', require('./auth/logout'));
 
 // for debugging
 app.all('/whoami', function (req, res) {
