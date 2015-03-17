@@ -1,10 +1,12 @@
 var app = require('../tangelo');
 var util = require('./util');
+var hooks = require('./hooks');
 var feathersMongoose = require('feathers-mongoose');
 var _ = require('lodash');
 
 
 // TODO - validation
+// TODO - filtering
 var schema = {
   'username': {
     'type': String,
@@ -41,15 +43,20 @@ _.extend(service, {
   },
   // hooks
   before: {
-    find: function (hook, next) {
-      console.log(hook);
-      next();
-    }
+    get: [hooks.selfModify],
+    find: [hooks.requireAdmin],
+    create: [hooks.requireAdmin],
+    update: [hooks.requireAdmin],
+    patch: [hooks.requireAdmin],
+    remove: [hooks.requireAdmin],
   },
   after: {
   }
 });
+delete service.patch;
 
+// USER ONLY CHANGE ITSELF (ASIDE FROM TYPE)
+// USER GET ITSELF
 
 service.schema.pre('save', function (next) {
   var user = this;
@@ -67,13 +74,3 @@ service.schema.pre('save', function (next) {
 
 
 exports = module.exports = service;
-
-// {
-//   find: function(params, callback) {},
-//   get: function(id, params, callback) {},
-//   create: function(data, params, callback) {},
-//   update: function(id, data, params, callback) {},
-//   patch: function(id, data, params, callback) {},
-//   remove: function(id, params, callback) {},
-//   setup: function(app) {}
-// };

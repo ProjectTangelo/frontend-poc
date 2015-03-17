@@ -28,7 +28,19 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.configure(feathers.rest());
+app.configure(feathers.rest(function DAVID (err, req, res, next) {
+  console.log(arguments);
+  // var err;
+  console.log(err, res.data);
+  if (err) {
+    return res.json({
+      error: err
+    });
+  }
+  res.json(res.data);
+  next();
+}));
+// app.configure(feathers.rest());
 app.configure(feathersHooks());
 app.configure(feathersPassport(function (defaults) {
   var MongoStore = connectMongo(defaults.createSession);
