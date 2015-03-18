@@ -6,7 +6,7 @@ var _ = require('lodash');
 
 
 // TODO - validation
-// TODO - filtering
+
 var schema = {
   'username': {
     'type': String,
@@ -18,7 +18,6 @@ var schema = {
     'type': String,
     'required': true,
     'trim': true,
-    // 'select': false
   },
   'email': {
     'type': String,
@@ -32,7 +31,7 @@ var schema = {
     'lowercase': true,
     'default': 'user',
     'enum': ['admin', 'user'],
-  }
+  },
 }
 
 var service = feathersMongoose('user', schema, app.mongoose);
@@ -41,21 +40,59 @@ _.extend(service, {
   findByUsername: function (username, callback) {
     return this.model.findOne({ 'username': username }, '-__v', callback);
   },
-  // hooks
+  // admin is inherently true/true
+  // anything omitted is false
+  permissions: {
+    'username': {
+      'user': {
+        'read': true,
+        'write': false
+      }
+    },
+    'password': {
+      'user': {
+        'read': false,
+        'write': true
+      }
+    },
+    'email': {
+      'user': {
+        'read': true,
+        'write': true
+      }
+    },
+    'type': {
+      'user': {
+        'read': false,
+        'write': false
+      }
+    },
+    '_id': {
+      'user': {
+        'read': true,
+        'write': false
+      }
+    }
+  },
   before: {
-    get: [hooks.selfModify],
+    get: [hooks.requireSelfOrAdmin],
     find: [hooks.requireAdmin],
     create: [hooks.requireAdmin],
-    update: [hooks.requireAdmin],
-    patch: [hooks.requireAdmin],
+    update: [hooks.requireSelfOrAdmin, hooks.filterWrite],
+    patch: [hooks.requireSelfOrAdmin, hooks.filterWrite],
     remove: [hooks.requireAdmin],
   },
   after: {
+    get: [hooks.filterRead],
+    find: [],
+    create: [],
+    update: [],
+    patch: [],
+    remove: [],
   }
 });
-delete service.patch;
 
-// USER ONLY CHANGE ITSELF (ASIDE FROM TYPE)
+// USER ONLY CHANGE ITSELF (ASIDE FROM TYPE AND USERNAME)
 // USER GET ITSELF
 
 service.schema.pre('save', function (next) {

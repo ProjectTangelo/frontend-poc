@@ -11,19 +11,14 @@ passport.serializeUser(function(user, callback) {
 
 passport.deserializeUser(function(id, callback) {
   // console.log('deserializeuser', id);
-  var params = {
-    query: {
-      fields: '_id username type email'
-    }
-  }
-  app.service('user').get(id, {}, callback);
+  app.service('user').model.findById(id, '_id username type email', {}, function (err, data) {
+      callback(err, data);
+  });
 });
 
 
 passport.use(new LocalStrategy(function (username, password, callback) {
   // console.log('hello from localstrategy', username, password);
-
-  // callback hell, you say? Too bad. Maybe promises later...
   app.service('user').findByUsername(username, function (err, user) {
     // console.log(err, user);
     if (err) {
@@ -34,7 +29,6 @@ passport.use(new LocalStrategy(function (username, password, callback) {
         message: 'User ' + username + ' not found'
       });
     }
-
     util.matches(password, user.password, function (err, matches) {
       // console.log(err, matches);
       if (err) {
@@ -63,7 +57,6 @@ exports = module.exports = function (req, res) {
       message: 'You are already logged in'
     });
   }
-
 
   passport.authenticate('local', function (err, user, info) {
     // console.log('hello from authenticate', err, user, info);
