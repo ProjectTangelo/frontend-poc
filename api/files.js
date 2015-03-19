@@ -3,13 +3,17 @@ var mongooseFS = require('mongoose-fs');
 
 var fileSchema = mongoose.Schema({
 	name: String,
-	size: Number
+	size: Number,
+	file: Object,
+	content: Buffer
 });
 
+/*
 fileSchema.plugin(mongooseFS, {
-	keys: ['content', 'complement'],
+	keys: ['content'],
 	mongoose: mongoose
 });
+*/
 
 var File = mongoose.model('File', fileSchema);
 
@@ -31,7 +35,7 @@ var fileService = {
 	get: function( id, params, callback ) {
 		var thing = {
 			name: 'Things',
-			content: 'Hello Thar'
+			file: 'Hello Thar'
 		};
 
 		console.log('Get Function');
@@ -43,20 +47,19 @@ var fileService = {
 				return err;
 			}
 
+			/*
 			file.retrieveBlobs(function(err, data) {
 				if( err ){
 					callback( null, thing );
 					console.log('Error 2');
 					return err;
 				}
+				callback(null, data);
+			});
+			*/
 
-				console.log('This is the data: ' + data);
-				callback(null, {
-					name: data.name,
-					size: data.size,
-					content: data
-				});
-			})
+			console.log('This is the data: ' + file.file);
+			callback(null, file.content.toString());
 		});
 		
 	},
@@ -65,17 +68,21 @@ var fileService = {
 		var file = new File({
 			name: data.name,
 			size: data.size,
-			content: data.file
-		});
-
-		file.save(function(err) {
-			if( err )
-				console.log('Failed to save file: ' + data.name + '\n\tError: ' + err);
+			file: data.file,
+			content: new Buffer(data.content, 'binary')
 		});
 
 		console.log("Create Function");
 
-		console.log( 'This is the file received: ' + file );
+		file.save(function(err) {
+			if( err )
+				console.log('Failed to save file: ' + data.name + '\n\tError: ' + err);
+			
+			console.log('Create file with id: ' + file._id);
+			console.log( 'This is the file received: ' + file.file );
+		});
+
+
 		callback( null, file );
 	}
 };

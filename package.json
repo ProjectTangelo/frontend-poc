@@ -13,12 +13,13 @@
     "feathers-passport": "^0.1.2",
     "lodash": "^3.1.0",
     "mongoose": "^3.8.24",
+    "mongoose-fs": "~0.2.7",
     "morgan": "^1.5.1",
+    "multer": "^0.1.8",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "require-directory": "^2.1.0",
-    "scmp": "^1.0.0",
-    "mongoose-fs": "~0.2.7"
+    "scmp": "^1.0.0"
   },
   "devDependencies": {},
   "engines": {
