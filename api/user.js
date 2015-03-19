@@ -42,6 +42,18 @@ var schema = {
     'default': 'user',
     'enum': ['admin', 'user'],
   },
+  'node_id': {
+    'type': String,
+    'trim': true,
+    'lowercase': true,
+    'default': '',
+  },
+  'container_id': {
+    'type': String,
+    'trim': true,
+    'lowercase': true,
+    'default': '',
+  }
 }
 
 var service = feathersMongoose('user', schema, app.mongoose);
