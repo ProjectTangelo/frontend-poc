@@ -58,8 +58,8 @@ var fileService = {
 			});
 			*/
 
-			console.log('This is the data: ' + file.file);
-			callback(null, file.content.toString());
+			console.log('This is the data: ' + file.content);
+			callback(null, file.content.toString('utf-8'));
 		});
 		
 	},
@@ -70,6 +70,7 @@ var fileService = {
 			size: data.size,
 			file: data.file,
 			content: new Buffer(data.content, 'binary')
+			// content: data.content
 		});
 
 		console.log("Create Function");
@@ -79,7 +80,8 @@ var fileService = {
 				console.log('Failed to save file: ' + data.name + '\n\tError: ' + err);
 			
 			console.log('Create file with id: ' + file._id);
-			console.log( 'This is the file received: ' + file.file );
+			console.log('This is the file received: ' + file.file);
+			console.log('This is the data received: ' + file.content);
 		});
 
 
