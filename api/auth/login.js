@@ -73,7 +73,7 @@ exports = module.exports = function (req, res) {
         return sendError(err.toString());
       }
       return res.json({
-        'success': user
+        'success': user.username
       });
     });
   })(req, res);
