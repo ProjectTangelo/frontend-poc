@@ -1,30 +1,50 @@
-
-
-
-var sendError = function (error) {
-
-}
+var _ = require('lodash');
 
 exports = module.exports = {
   requireAdmin: function (hook, next) {
-    console.log(hook);
+    // console.log('requireadmin', hook);
     if (!hook.params.user || hook.params.user.type !== 'admin') {
       return next({
-        message: 'Admin required'
+        message: 'Unauthorized'
       });
     }
     next();
   },
-  selfModify: function (hook, next) {
-    console.log(hook);
-    if (hook.callback.name === 'deserialized') {
-      return next();
-    }
-    if (!hook.params.user) {
+  requireSelfOrAdmin: function (hook, next) {
+    // console.log('requireselforadmin', hook);
+    // TODO - create / patch
+    if (!hook.params.user || (hook.params.user.type !== 'admin' && hook.id != hook.params.user._id)) {
       return next({
-        message: 'User required'
+        message: 'Unauthorized'
       });
     }
-    // if (hook.params.user.type === 'user' && )
+    next();
+  },
+  filterRead: function (hook, next) {
+    var user = hook.params.user.type;
+    if (user !== 'admin') {
+      // mongoose keeps its internal results on _doc
+      var result = hook.result._doc;
+      var permissions = this.permissions;
+      result = _.pick(result, function (permission, field, obj) {
+        return permissions[field] && permissions[field][user].read;
+      });
+      hook.result._doc = result;
+    }
+    next();
+  },
+  filterWrite: function (hook, next) {
+    var user = hook.params.user.type;
+    if (user !== 'admin') {
+      var data = hook.data;
+      for (var field in data) {
+        if (!this.permissions[field] || !this.permissions[field][user] || !this.permissions[field][user].write) {
+          return next({
+            message: 'You are not authorized to write on field: ' + field
+          });
+        }
+      }
+    }
+    next();
   }
 }
