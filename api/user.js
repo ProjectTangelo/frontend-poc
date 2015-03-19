@@ -5,7 +5,7 @@ var feathersMongoose = require('feathers-mongoose');
 var _ = require('lodash');
 
 
-// TODO - validation
+// TODO - validation - https://www.npmjs.com/package/mongoose-validator
 
 var schema = {
   'username': {
@@ -79,21 +79,16 @@ _.extend(service, {
     find: [hooks.requireAdmin],
     create: [hooks.requireAdmin],
     update: [hooks.requireSelfOrAdmin, hooks.filterWrite],
-    patch: [hooks.requireSelfOrAdmin, hooks.filterWrite],
     remove: [hooks.requireAdmin],
   },
   after: {
     get: [hooks.filterRead],
     find: [],
     create: [],
-    update: [],
-    patch: [],
+    update: [hooks.filterRead],
     remove: [],
   }
 });
-
-// USER ONLY CHANGE ITSELF (ASIDE FROM TYPE AND USERNAME)
-// USER GET ITSELF
 
 service.schema.pre('save', function (next) {
   var user = this;
