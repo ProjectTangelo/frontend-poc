@@ -14,6 +14,16 @@ var schema = {
     'trim': true,
     'unique': true,
   },
+  'name_first': {
+    'type': String,
+    'trim': true,
+    'default': '',
+  },
+  'name_last': {
+    'type': String,
+    'trim': true,
+    'default': '',
+  },
   'password': {
     'type': String,
     'required': true,
@@ -47,6 +57,18 @@ _.extend(service, {
       'user': {
         'read': true,
         'write': false
+      }
+    },
+    'name_first': {
+      'user': {
+        'read': true,
+        'write': true
+      }
+    },
+    'name_last': {
+      'user': {
+        'read': true,
+        'write': true
       }
     },
     'password': {

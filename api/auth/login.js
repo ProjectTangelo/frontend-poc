@@ -11,7 +11,7 @@ passport.serializeUser(function(user, callback) {
 
 passport.deserializeUser(function(id, callback) {
   // console.log('deserializeuser', id);
-  app.service('user').model.findById(id, '_id username type email', {}, function (err, data) {
+  app.service('user').model.findById(id, '', {}, function (err, data) {
       callback(err, data);
   });
 });
