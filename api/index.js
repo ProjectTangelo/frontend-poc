@@ -1,6 +1,8 @@
 var app = require('../tangelo');
 
 app.service('/user', require('./user'));
+app.service('/uploads/', require('./files'));
+
 
 app.post('/login', require('./auth/login'));
 app.post('/logout', require('./auth/logout'));

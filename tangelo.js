@@ -40,7 +40,7 @@ app.configure(feathers.rest(function DAVID (err, req, res, next) {
   res.json(res.data);
   next();
 }));
-// app.configure(feathers.rest());
+app.configure(feathers.rest());
 app.configure(feathersHooks());
 app.configure(feathersPassport(function (defaults) {
   var MongoStore = connectMongo(defaults.createSession);
