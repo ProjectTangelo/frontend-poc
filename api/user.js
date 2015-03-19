@@ -62,6 +62,20 @@ _.extend(service, {
   findByUsername: function (username, callback) {
     return this.model.findOne({ 'username': username }, '-__v', callback);
   },
+  // TODO - make less ugly
+  createAdmin: function () {
+    var admin = new this.model({
+      username: app.get('default admin username'),
+      password: app.get('default admin password'),
+      email: app.get('default admin email'),
+      type: 'admin',
+    }).save(function (err, data) {
+      if (err) {
+        throw new Error('Error while creating default admin account', err);
+      }
+      console.log('...done! Here\'s your admin account information:\n', data);
+    });
+  },
   // admin is inherently true/true
   // anything omitted is false
   permissions: {

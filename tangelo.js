@@ -64,17 +64,7 @@ app.service('user').findByUsername(app.get('default admin username'), function (
   }
   if (!user) {
     console.log('Creating default admin user...');
-    app.service('user').create({
-      username: app.get('default admin username'),
-      password: app.get('default admin password'),
-      email: app.get('default admin email'),
-      type: 'admin',
-    }, {}, function (err, data) {
-      if (err) {
-        throw new Error('Error while creating default admin account', err);
-      }
-      console.log('...done! Here\'s your admin account information:\n', data);
-    });
+    app.service('user').createAdmin();
   }
   else {
     console.log('Hello! Here\'s your admin account information:\n', user);
