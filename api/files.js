@@ -5,7 +5,7 @@ var fileSchema = mongoose.Schema({
 	name: String,
 	size: Number,
 	file: Object,
-	content: String
+	content: Buffer
 });
 
 /*
@@ -21,13 +21,11 @@ var File = mongoose.model('File', fileSchema);
 var fileService = {
 	// Returns a list of all the files.
 	find: function( params, callback ) {
-		console.log('Find Method');
 		File.find({}, function(err, files) {
 			if( err ) {
 				console.log('Failed to load files');
 				console.log( err );
 			}
-			// console.log("Files: " + files);
 			callback( null, files );
 		});
 	},
@@ -59,8 +57,10 @@ var fileService = {
 			*/
 
 			// console.log('This is the data: ' + file.content);
-			callback(null, file.content.toString());
-			// callback(null, file.content);
+			// callback(null, file.content.toString('binary'));
+			// callback(null, new Blob(file.content, {type: file.file.type}));
+			
+			callback(null, file.content.toString('utf8'));
 		});
 		
 	},
@@ -74,7 +74,10 @@ var fileService = {
 			content: data.content
 		});
 
-		console.log("Create Function");
+		// var fs = require('fs');
+		// fs.writeFile('thing.md', file.content);
+
+		// console.log("Create Function");
 
 		file.save(function(err) {
 			if( err )

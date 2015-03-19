@@ -28,7 +28,17 @@ app.use(morgan('dev'));
 app.use(bodyParser.json({ limit: '16mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '16mb' }));
 
-app.configure(feathers.rest());
+app.configure(feathers.rest(function (req, res) {
+  res.format({
+    'text/plain': function () {
+      res.send(res.data);
+    },
+
+    'default': function () {
+      res.json(res.data);
+    }
+  });
+}));
 app.configure(feathersHooks());
 app.configure(feathersPassport(function (defaults) {
   var MongoStore = connectMongo(defaults.createSession);
