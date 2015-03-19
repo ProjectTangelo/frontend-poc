@@ -26,8 +26,8 @@ app.set('default admin password', process.env.admin_password || 'himitsu'); // w
 app.set('default admin email', process.env.admin_email || 'admin@admin.admin');
 
 app.use(morgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ limit: '16mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '16mb' }));
 
 app.configure(feathers.rest());
 app.configure(feathersHooks());

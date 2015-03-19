@@ -5,7 +5,7 @@ var fileSchema = mongoose.Schema({
 	name: String,
 	size: Number,
 	file: Object,
-	content: Buffer
+	content: String
 });
 
 /*
@@ -27,7 +27,7 @@ var fileService = {
 				console.log('Failed to load files');
 				console.log( err );
 			}
-			console.log("Files: " + files);
+			// console.log("Files: " + files);
 			callback( null, files );
 		});
 	},
@@ -58,8 +58,9 @@ var fileService = {
 			});
 			*/
 
-			console.log('This is the data: ' + file.content);
-			callback(null, file.content.toString('utf-8'));
+			// console.log('This is the data: ' + file.content);
+			callback(null, file.content.toString());
+			// callback(null, file.content);
 		});
 		
 	},
@@ -69,8 +70,8 @@ var fileService = {
 			name: data.name,
 			size: data.size,
 			file: data.file,
-			content: new Buffer(data.content, 'binary')
-			// content: data.content
+			// content: new Buffer(data.content, 'base64')
+			content: data.content
 		});
 
 		console.log("Create Function");
@@ -80,8 +81,8 @@ var fileService = {
 				console.log('Failed to save file: ' + data.name + '\n\tError: ' + err);
 			
 			console.log('Create file with id: ' + file._id);
-			console.log('This is the file received: ' + file.file);
-			console.log('This is the data received: ' + file.content);
+			// console.log('This is the file received: ' + file.file);
+			// console.log('This is the data received: ' + file.content);
 		});
 
 
