@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var connectMongo = require('connect-mongo');
 var _ = require('lodash');
-var multer = require('multer');
 
 var app = this.app = feathers();
 
@@ -44,21 +43,15 @@ app.configure(feathersPassport(function (defaults) {
     passport: passport
   });
 }));
-app.use('/', feathers.static(__dirname + '/public', {
-  index: 'base.html'
-}));
 
-app.use('/uploads', feathers.static(__dirname + '/uploads'));
-app.use(multer({
-  dest: './uploads/',
-
-}));
-
-// Expose app for our APIs later
+// Expose app
 exports = module.exports = app;
 
 // Initialize the APIs
 require('./api/');
+
+// Initialize routes
+require('./routes');
 
 app.listen(app.get('port'), function () {
   console.log('Tangelo running on port %s', app.get('port'));
