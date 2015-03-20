@@ -1,4 +1,8 @@
 var mongoose = require('mongoose');
+
+// TODO: Setup response object to send with content type
+// var http = require('http');
+
 // var feathersMongoose = require('feathers-mongoose');
 
 var fileSchema = mongoose.Schema({
@@ -73,6 +77,7 @@ var fileService = {
 			// callback(null, new Blob(file.content, {type: file.file.type}));
 			
 			callback(null, file.content.toString('binary'));
+			// callback(null, file);
 		});
 		
 	},
