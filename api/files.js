@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var mongooseFS = require('mongoose-fs');
+// var feathersMongoose = require('feathers-mongoose');
 
 var fileSchema = mongoose.Schema({
 	name: String,
@@ -16,6 +16,7 @@ fileSchema.plugin(mongooseFS, {
 */
 
 var File = mongoose.model('File', fileSchema);
+// var File = feathersMongoose('File', fileSchema, mongoose);
 
 
 var fileService = {
@@ -27,6 +28,17 @@ var fileService = {
 				console.log( err );
 			}
 			callback( null, files );
+		});
+	},
+
+	remove: function( id, params, callback ) {
+		File.findByIdAndRemove(id, function(err, data) {
+			if( err ) {
+				console.log(err);
+				return err;
+			}
+
+			console.log("Removed entity: " + id);
 		});
 	},
 
@@ -60,7 +72,7 @@ var fileService = {
 			// callback(null, file.content.toString('binary'));
 			// callback(null, new Blob(file.content, {type: file.file.type}));
 			
-			callback(null, file.content.toString('utf8'));
+			callback(null, file.content.toString('binary'));
 		});
 		
 	},
