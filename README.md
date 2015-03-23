@@ -1,5 +1,7 @@
 # frontend-poc
 
+Server for directing the API calls and serving the content for Tangelo's master server
+
 ## Download
 
 Get the code using this git command. It will not only clone the repository, but initialize the git submodules.
