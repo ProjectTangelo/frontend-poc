@@ -3,7 +3,7 @@ var app = require('../tangelo');
 app.service('/user', require('./user'));
 app.service('/uploads/', require('./files'));
 
-var FileService = require('./files');
+// var FileService = require('./files');
 
 /*
 app.post('/upload', function(req, res) {

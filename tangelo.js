@@ -20,6 +20,8 @@ app.set('cookie secret', process.env.cookie_secret || 'himitsu');
 app.set('cookie name', process.env.cookie_name || 'sid');
 app.set('logger', process.env.loglevel || 'dev');
 app.set('x-powered-by', false);
+app.set('view engine', 'jade');
+app.set('views', process.cwd() + '/public');
 app.set('default admin username', process.env.admin_username || 'admin');
 app.set('default admin password', process.env.admin_password || 'himitsu'); // will be hashed automatically
 app.set('default admin email', process.env.admin_email || 'admin@admin.admin');

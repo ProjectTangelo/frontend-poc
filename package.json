@@ -11,6 +11,7 @@
     "feathers-hooks": "^0.5.0",
     "feathers-mongoose": "git://github.com/tylergoodman/feathers-mongoose",
     "feathers-passport": "^0.1.2",
+    "jade": "^1.9.2",
     "lodash": "^3.1.0",
     "mongoose": "^3.8.24",
     "morgan": "^1.5.1",
@@ -19,7 +20,9 @@
     "require-directory": "^2.1.0",
     "scmp": "^1.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "faker": "^2.1.2"
+  },
   "engines": {
     "node": ">=0.10.22",
     "npm": ">=1.3.14"
