@@ -3,9 +3,20 @@ var middleware = require('./middleware');
 var feathers = require('feathers');
 
 app.get('/', function (req, res) {
-  res.render('index');
-  // res.send('homepage');
+  if (req.user) {
+    if (req.user.type === 'admin') {
+      res.render('admin', req);
+    }
+    else {
+      res.render('client', req);
+    }
+  }
+  else {
+    // TODO - csrf
+    res.render('login');
+  }
 });
+
 app.use('/', feathers.static(__dirname + '/public'));
 
 app.use('/admin', middleware.requireAdmin);
