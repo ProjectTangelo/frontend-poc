@@ -29,7 +29,7 @@ app.get('/lesson/:id', function(req, res) {
 */
 
 app.post('/login', require('./auth/login'));
-app.post('/logout', require('./auth/logout'));
+app.get('/logout', require('./auth/logout'));
 
 // for debugging
 app.all('/whoami', function (req, res) {
