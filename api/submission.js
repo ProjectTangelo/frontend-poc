@@ -3,12 +3,20 @@ var hooks = require('./hooks');
 var feathersMongoose = require('feathers-mongoose');
 var _ = require('lodash');
 
-// lesson plans that the admin adds and the clients can view
+// submissions that the clients can ...submit.
+// you're going to always want to use PUT instead of POST for this I think?
 
 // TODO - validation?
 // TODO - created/modified
 
 var schema = {
+  // whose submission is this
+  'owner': {
+    'type': String,
+    'required': true,
+    'trim': true,
+  },
+  // what assignment was it for
   'number': {
     'type': Number,
     'required': true,
@@ -19,17 +27,17 @@ var schema = {
   'content': {
     'type': String,
     'require': true,
-  }
+  },
 }
 
-var service = feathersMongoose('lesson', schema, app.mongoose);
+var service = feathersMongoose('submission', schema, app.mongoose);
 
 _.extend(service, {
   before: {
-    get: [],
-    find: [],
-    create: [hooks.requireAdmin, hooks.addCreatedDate],
-    update: [hooks.requireAdmin],
+    get: [hooks.requireSelfOrAdminSubmissions],
+    find: [hooks.requireSelfOrAdmin],
+    create: [hooks.requireSelfOrAdmin, hooks.addCreatedDate],
+    update: [hooks.requireSelfOrAdmin],
     remove: [hooks.requireAdmin],
   },
   after: {

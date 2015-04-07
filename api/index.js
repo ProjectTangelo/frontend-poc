@@ -1,7 +1,10 @@
 var app = require('../tangelo');
 
 app.service('/user', require('./user'));
-app.service('/uploads/', require('./files'));
+app.service('/uploads', require('./files'));
+app.service('/lesson', require('./lesson'));
+app.service('/submission', require('./submission'));
+
 
 // var FileService = require('./files');
 

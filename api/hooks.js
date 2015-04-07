@@ -46,5 +46,20 @@ exports = module.exports = {
       }
     }
     next();
+  },
+  addCreatedDate: function (hook, next) {
+    hook.data.createdAt = new Date();
+    next();
+  },
+  // TODO
+  requireSelfOrAdminSubmissions: function (hook, next) {
+    // // allow admins
+    // if (hook.params.user && hook.params.user.type === 'admin') {
+    //   return next();
+    // }
+    // if (hook.params.user && hook.params.user.type === 'user') {
+    //
+    // }
+    next();
   }
 }
