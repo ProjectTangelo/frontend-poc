@@ -39,10 +39,10 @@ function addOwner (hook, next) {
 
 _.extend(service, {
   before: {
-    get: [hooks.requireSelfOrAdminSubmissions],
-    find: [hooks.requireSelfOrAdminSubmissions],
-    create: [hooks.requireSelfOrAdminSubmissions, hooks.addCreatedAt, addOwner],
-    update: [hooks.requireSelfOrAdminSubmissions],
+    get: [hooks.requireSelfOrAdminByOwner],
+    find: [hooks.requireSelfOrAdminByOwner],
+    create: [hooks.requireSelfOrAdminByOwner, hooks.addCreatedAt, addOwner],
+    update: [hooks.requireSelfOrAdminByOwner],
     remove: [hooks.requireAdmin],
   },
   after: {
