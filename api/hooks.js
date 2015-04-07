@@ -10,7 +10,7 @@ exports = module.exports = {
     }
     next();
   },
-  requireSelfOrAdmin: function (hook, next) {
+  requireSelfOrAdminById: function (hook, next) {
     // console.log('requireselforadmin', hook);
     // TODO - create / patch
     if (!hook.params.user || (hook.params.user.type !== 'admin' && hook.id != hook.params.user._id)) {
@@ -47,19 +47,19 @@ exports = module.exports = {
     }
     next();
   },
-  addCreatedDate: function (hook, next) {
+  addCreatedAt: function (hook, next) {
     hook.data.createdAt = new Date();
     next();
   },
-  // TODO
-  requireSelfOrAdminSubmissions: function (hook, next) {
-    // // allow admins
-    // if (hook.params.user && hook.params.user.type === 'admin') {
-    //   return next();
-    // }
-    // if (hook.params.user && hook.params.user.type === 'user') {
-    //
-    // }
-    next();
+  requireSelfOrAdminByOwner: function (hook, next) {
+    if (hook.params.user && hook.params.user.type === 'admin') {
+      return next();
+    }
+    if (hook.data.owner && hook.data.owner === hook.params.user._id) {
+      return next();
+    }
+    next({
+      message: 'Unauthorized'
+    });
   }
 }

@@ -18,7 +18,7 @@ var schema = {
   },
   'content': {
     'type': String,
-    'require': true,
+    'required': true,
   }
 }
 
@@ -28,7 +28,7 @@ _.extend(service, {
   before: {
     get: [],
     find: [],
-    create: [hooks.requireAdmin, hooks.addCreatedDate],
+    create: [hooks.requireAdmin, hooks.addCreatedAt],
     update: [hooks.requireAdmin],
     remove: [hooks.requireAdmin],
   },

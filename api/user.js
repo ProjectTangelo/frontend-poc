@@ -123,10 +123,10 @@ _.extend(service, {
     }
   },
   before: {
-    get: [hooks.requireSelfOrAdmin],
+    get: [hooks.requireSelfOrAdminById],
     find: [hooks.requireAdmin],
     create: [hooks.requireAdmin],
-    update: [hooks.requireSelfOrAdmin, hooks.filterWrite],
+    update: [hooks.requireSelfOrAdminById, hooks.filterWrite],
     remove: [hooks.requireAdmin],
   },
   after: {

@@ -26,18 +26,23 @@ var schema = {
   },
   'content': {
     'type': String,
-    'require': true,
+    'required': true,
   },
 }
 
 var service = feathersMongoose('submission', schema, app.mongoose);
 
+function addOwner (hook, next) {
+  hook.data.owner = hook.params.user._id;
+  next();
+}
+
 _.extend(service, {
   before: {
     get: [hooks.requireSelfOrAdminSubmissions],
-    find: [hooks.requireSelfOrAdmin],
-    create: [hooks.requireSelfOrAdmin, hooks.addCreatedDate],
-    update: [hooks.requireSelfOrAdmin],
+    find: [hooks.requireSelfOrAdminSubmissions],
+    create: [hooks.requireSelfOrAdminSubmissions, hooks.addCreatedAt, addOwner],
+    update: [hooks.requireSelfOrAdminSubmissions],
     remove: [hooks.requireAdmin],
   },
   after: {
