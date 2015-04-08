@@ -3,6 +3,7 @@ var app = require('../tangelo');
 app.service('/user', require('./user'));
 app.service('/uploads', require('./files'));
 app.service('/lesson', require('./lesson'));
+app.service('/feedback', require('./feedback'));
 app.service('/submission', require('./submission'));
 
 

@@ -53,8 +53,8 @@ var schema = {
     'trim': true,
     'lowercase': true,
     'default': '',
-  }
-}
+  },
+};
 
 var service = feathersMongoose('user', schema, app.mongoose);
 

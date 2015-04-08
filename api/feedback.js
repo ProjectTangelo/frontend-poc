@@ -3,32 +3,31 @@ var hooks = require('./hooks');
 var feathersMongoose = require('feathers-mongoose');
 var _ = require('lodash');
 
-// lesson plans that the admin adds and the clients can view
-
 // TODO - validation?
 
 var schema = {
-  'number': {
-    'type': Number,
+  'submission': {
+    'type': String,
+    'required': true,
+    'ref': 'submission',
+  },
+  'content': {
+    'type': String,
     'required': true,
   },
   'createdAt': {
     'type': Date,
   },
-  'content': {
-    'type': String,
-    'required': true,
-  }
 };
 
-var service = feathersMongoose('lesson', schema, app.mongoose);
+var service = feathersMongoose('feedback', schema, app.mongoose);
 
 _.extend(service, {
   before: {
-    get: [],
-    find: [],
-    create: [hooks.requireAdmin, hooks.addCreatedAt],
-    update: [hooks.requireAdmin],
+    get: [hooks.requireSelfOrAdminByOwner],
+    find: [hooks.requireSelfOrAdminByOwner],
+    create: [hooks.requireSelfOrAdminByOwner, hooks.addCreatedAt],
+    update: [hooks.requireSelfOrAdminByOwner],
     remove: [hooks.requireAdmin],
   },
   after: {
