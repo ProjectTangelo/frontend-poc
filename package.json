@@ -9,7 +9,7 @@
     "dotenv": "~0.4.0",
     "feathers": "^1.0.2",
     "feathers-hooks": "^0.5.0",
-    "feathers-mongoose": "git://github.com/tylergoodman/feathers-mongoose#0c5a7a293e4339d340395dbf5d6048f8e265c2fd",
+    "feathers-mongoose": "git://github.com/tylergoodman/feathers-mongoose#78960d9276e8aca93044a7ea62d49deee6fd8cdd",
     "feathers-passport": "^0.1.2",
     "jade": "^1.9.2",
     "lodash": "^3.1.0",

@@ -36,7 +36,7 @@ var schema = {
 var service = feathersMongoose('submission', schema, app.mongoose);
 
 function addOwner(hook, next) {
-  hook.data._owner = hook.params.user._id;
+  hook.data.owner = hook.params.user._id;
   next();
 }
 
@@ -55,7 +55,6 @@ _.extend(service, {
       .exec(callback);
   },
   get: function (id, params, callback) {
-    console.log("GET", params);
     if (typeof params === 'function') {
       callback = params;
       params = {};
