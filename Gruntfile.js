@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 		pkg: grunt.file.readJSON('package.json'),
 		protractor: {
 			options: {
-				configFile: 'test/protractor-config.js',
+				configFile: 'test/protractor/protractor-config.js',
 				noColor: false,
 				args: {}
 			},

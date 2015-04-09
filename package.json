@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "sudo node tangelo.js",
-    "test": "sudo ./node_modules/protractor/bin/webdriver-manager update && sudo ./node_modules/grunt-cli/bin/grunt test --verbose"
+    "test": "sudo ./node_modules/protractor/bin/webdriver-manager update && sudo ./node_modules/grunt-cli/bin/grunt test"
   },
   "main": "tangelo.js"
 }
