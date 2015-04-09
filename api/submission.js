@@ -18,7 +18,7 @@ var schema = {
   // what assignment was it for
   'number': {
     'type': Number,
-    'required': true,
+    'default': 0,
   },
   'createdAt': {
     'type': Date,
@@ -36,8 +36,20 @@ var schema = {
 var service = feathersMongoose('submission', schema, app.mongoose);
 
 function addOwner(hook, next) {
-  hook.data.owner = hook.params.user._id;
-  next();
+  // hook.data.owner = hook.params.user._id;
+  // next();
+  // retard hack for demo
+  var users = app.service('user');
+  users.model
+    .findOne({ username: hook.data.username })
+    .lean()
+    .exec(function (err, user) {
+      if (err) return next({ message: err });
+      if (!user) return next({ message: 'Unknown username' });
+      hook.data.owner = user._id;
+      delete hook.data.username;
+      next();
+    });
 }
 
 _.extend(service, {
@@ -72,15 +84,15 @@ _.extend(service, {
     find: [],
     create: [hooks.addCreatedAt, addOwner],
     update: [addOwner],
-    remove: [hooks.requireAdmin],
+    // remove: [hooks.requireAdmin],
   },
   after: {
-    get: [hooks.requireSelfOrAdminByOwner],
-    find: [hooks.requireSelfOrAdminByOwner],
+    // get: [hooks.requireSelfOrAdminByOwner],
+    // find: [hooks.requireSelfOrAdminByOwner],
     create: [],
     update: [],
     remove: [],
-  }
+  },
 });
 
 
