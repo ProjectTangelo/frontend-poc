@@ -44,17 +44,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.configure(feathers.rest(function (req, res) {
-  res.format({
-    'text/plain': function () {
-      res.send(res.data);
-    },
-
-    'default': function () {
-      res.json(res.data);
-    }
-  });
-}));
+app.configure(feathers.rest());
 app.configure(feathersHooks());
 app.configure(feathersPassport(function (defaults) {
   var MongoStore = connectMongo(defaults.createSession);
