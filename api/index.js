@@ -1,10 +1,27 @@
 var app = require('../tangelo');
+var _ = require('lodash');
 
 app.service('/user', require('./user'));
 app.service('/uploads', require('./files'));
 app.service('/lesson', require('./lesson'));
 app.service('/feedback', require('./feedback'));
 app.service('/submission', require('./submission'));
+app.get('/mysubmissions', function (req, res) {
+  var submissions = app.service('submission');
+  submissions.model
+    .find()
+    .populate('owner')
+    .lean()
+    .exec(function (err, submissions) {
+      if (err) res.json({ error: { message: err } });
+      submissions = _.filter(submissions, function (submission) {
+        return submission.owner._id.toString() == req.user._id.toString();
+      });
+      for (var i = 0; i < submissions.length; i++)
+        delete submissions[i].owner;
+      res.send(submissions);
+    })
+});
 
 
 // var FileService = require('./files');
