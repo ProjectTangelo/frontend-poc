@@ -110,10 +110,10 @@ describe('Admin Tests', function() {
         submit = element(by.buttonText('Submit'));
       });
 
-      it('creates a single user', function(){
+      function addUser( newUserName ) {
         browser.setLocation('users/add');
 
-        username.sendKeys('Test');
+        username.sendKeys( newUserName );
         fname.sendKeys('Tyler');
         lname.sendKeys('Davidson');
         email.sendKeys('tyler@david.johnny');
@@ -122,6 +122,37 @@ describe('Admin Tests', function() {
         confirm.sendKeys('eduardo');
         submit.click();
 
+        browser.driver.wait(function(){
+          return browser.driver.getCurrentUrl().then(function(url){
+            return url == baseURL + '/#/users';
+          });
+        }, defaultTimeOut);
+      }
+
+      function deleteLastUser() {
+        browser.setLocation('users');
+
+        // Deletes the user.
+        element.all(by.id('delete-button')).last().click();
+        browser.refresh();
+      }
+
+      it('creates a single user', function(){
+        
+        var newUserName = 'SingleUserAddTest';
+        addUser( newUserName );
+        
+        browser.setLocation('users');
+        element.all(by.exactBinding('user.username')).filter(function(elem, index){
+          return elem.getText().then(function(text){
+            return text === newUserName;
+          });
+        }).then(function(filteredElements){
+            expect( filteredElements.length > 0 ).toBe(true);
+        });
+
+
+        deleteLastUser();
       });
 
       it('does not create duplicate users', function(){
@@ -145,16 +176,7 @@ describe('Admin Tests', function() {
 
         // Tries to add duplicate users.
         for( var i = 0; i < 2; ++i ) {
-          browser.setLocation('users/add');
-
-          username.sendKeys(newUserName);
-          fname.sendKeys('Tyler');
-          lname.sendKeys('Davidson');
-          email.sendKeys('tyler@david.johnny');
-          type.click();
-          password.sendKeys('eduardo');
-          confirm.sendKeys('eduardo');
-          submit.click();
+          addUser( newUserName );
         }
 
         // Counts after it tries to add duplicate users.
@@ -170,6 +192,10 @@ describe('Admin Tests', function() {
               element.click();
           });
         });
+
+        if( alreadyExists == false ) {
+          deleteLastUser();
+        }
 
       });
 
@@ -202,6 +228,10 @@ describe('Admin Tests', function() {
           submit.click();
 
           expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users/');
+
+          // Deletes the user.
+          element.all(by.id('delete-button')).last().click();
+          browser.refresh();
           */
       });
 
@@ -232,18 +262,11 @@ describe('Admin Tests', function() {
 
           expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
 
-          browser.setLocation('users/add');
-
-          username.sendKeys(newUserName);
-          fname.sendKeys('Tyler');
-          lname.sendKeys('Davidson');
-          email.sendKeys('tyler@david.johnny');
-          type.click();
-          password.sendKeys('eduardo');
-          confirm.sendKeys('eduardo');
-          submit.click();
+          addUser( newUserName );
 
           expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
+
+          deleteLastUser();
       });
 
       it('does not require last name', function(){
@@ -261,18 +284,11 @@ describe('Admin Tests', function() {
 
           expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
 
-          browser.setLocation('users/add');
-
-          username.sendKeys(newUserName);
-          fname.sendKeys('Tyler');
-          lname.sendKeys('Davidson');
-          email.sendKeys('tyler@david.johnny');
-          type.click();
-          password.sendKeys('eduardo');
-          confirm.sendKeys('eduardo');
-          submit.click();
+          addUser( newUserName );
 
           expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
+
+          deleteLastUser();
       });
 
       it('creates multiple users through bulk import', function(){
@@ -295,19 +311,11 @@ describe('Admin Tests', function() {
         browser.setLocation('users/add');
         var newUserName = 'DeleteUser'
 
-        username.sendKeys(newUserName);
-        fname.sendKeys('Tyler');
-        // lname.sendKeys('Davidson');
-        email.sendKeys('tyler@david.johnny');
-        type.click();
-        password.sendKeys('eduardo');
-        confirm.sendKeys('eduardo');
-        submit.click();
+        addUser( newUserName );
 
         expect(browser.getCurrentUrl()).toBe(baseURL + '/#/users');
 
-        // Deletes the user.
-        element.all(by.id('delete-button')).last().click();
+        deleteLastUser();
 
         // Checks to make sure that the user was deleted.
         element.all(by.binding('user.username')).count().then(function(count){
@@ -322,8 +330,7 @@ describe('Admin Tests', function() {
 
   describe('Lesson Spec', function(){
 
-    it('adds lessons', function(){
-      var lessonName = 'AddedLessonTest';
+    function addLesson( lessonName ) {
       var filePath = './admin.spec.js';
       var absolutePath = path.resolve(__dirname, filePath);
       
@@ -338,8 +345,18 @@ describe('Admin Tests', function() {
           return url == baseURL + '/#/lessons';
         });
       }, defaultTimeOut);
+    }
 
-      var found = false;
+    function deleteLast() {
+      // Deletes the lesson.
+      element.all(by.id('delete-button')).last().click();
+      browser.refresh();
+    }
+
+    it('adds lessons', function(){
+      var lessonName = 'AddedLesson'
+      addLesson( lessonName );
+
       element.all(by.exactBinding('file.name')).filter(function(elem, index){
         return elem.getText().then(function(text){
           return text === lessonName;
@@ -347,15 +364,47 @@ describe('Admin Tests', function() {
       }).then(function(filteredElements){
           expect( filteredElements.length > 0 ).toBe(true);
       });
-      
+
+      deleteLast();      
     });
 
     it('opens a lesson', function(){
+      
+      browser.setLocation('lessons');
+
+      var lessonName = 'OpenLesson';
+
+      addLesson( lessonName );
+
+      element.all(by.id('edit-button')).last().click();
+
+      expect(browser.getCurrentUrl()).toContain(baseURL + '/#/lessons/');
+      expect(browser.getCurrentUrl()).toNotBe(baseURL + '/#/lessons');
+
+      
+      browser.setLocation('lessons');
+      deleteLast();
 
     });
 
     it('deletes a lesson', function(){
+      browser.setLocation('lessons');
 
+      var startCount;
+      element.all(by.exactBinding('file.name')).count().then(function(count){
+        startCount = count;
+      });
+
+      var lessonName = 'DeleteFile';
+      addLesson(lessonName);
+
+      expect(browser.getCurrentUrl()).toBe(baseURL + '/#/lessons');
+
+      deleteLast();
+
+      element.all(by.exactBinding('file.name')).count().then(function(count){
+        expect( count ).toBe( startCount );
+      });
     });
 
   });
