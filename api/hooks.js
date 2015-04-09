@@ -55,7 +55,7 @@ exports = module.exports = {
     if (hook.params.user && hook.params.user.type === 'admin') {
       return next();
     }
-    if (hook.data && hook.data.owner && hook.data.owner === hook.params.user._id) {
+    if (hook.params.query && hook.params.query.conditions && hook.params.query.conditions.owner && hook.params.query.conditions.owner == hook.params.user._id) {
       return next();
     }
     next({

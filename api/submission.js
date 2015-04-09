@@ -68,15 +68,15 @@ _.extend(service, {
       .exec(callback);
   },
   before: {
-    get: [hooks.requireSelfOrAdminByOwner],
-    find: [hooks.requireSelfOrAdminByOwner],
-    create: [hooks.requireSelfOrAdminByOwner, hooks.addCreatedAt, addOwner],
-    update: [hooks.requireSelfOrAdminByOwner],
+    get: [],
+    find: [],
+    create: [hooks.addCreatedAt, addOwner],
+    update: [addOwner],
     remove: [hooks.requireAdmin],
   },
   after: {
-    get: [],
-    find: [],
+    get: [hooks.requireSelfOrAdminByOwner],
+    find: [hooks.requireSelfOrAdminByOwner],
     create: [],
     update: [],
     remove: [],
