@@ -1,11 +1,13 @@
 var app = require('../tangelo');
 
 app.service('/user', require('./user'));
-app.service('/uploads', require('./files'));
+
+app.get('/uploads/:id', require('./uploads'));
+app.service('/file', require('./file'));
+
 app.service('/lesson', require('./lesson'));
 app.service('/feedback', require('./feedback'));
 app.service('/submission', require('./submission'));
-
 
 // var FileService = require('./files');
 
@@ -15,17 +17,6 @@ app.post('/upload', function(req, res) {
 	console.log( req.body );
 	console.log( req.files );
 	//res.status(204).end();
-});
-
-*/
-/*
-app.get('/lesson/:id', function(req, res) {
-  // var rstream = fs.createReadStream(dirname + '/' + path);
-    FileService.get(req.params['id'], null, function(err, result){
-      res.set('Content-Type', result.file.type);
-      res.send( result.content );
-    });
-  // res.send( req.params['id'] );
 });
 */
 

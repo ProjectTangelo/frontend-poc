@@ -4,6 +4,7 @@ var feathers = require('feathers');
 var feathersPassport = require('feathers-passport');
 var feathersHooks = require('feathers-hooks');
 var bodyParser = require('body-parser');
+var multer = require('multer');
 var morgan = require('morgan');
 var connectMongo = require('connect-mongo');
 var _ = require('lodash');
@@ -27,8 +28,21 @@ app.set('default admin password', process.env.admin_password || 'himitsu'); // w
 app.set('default admin email', process.env.admin_email || 'admin@admin.admin');
 
 app.use(morgan('dev'));
-app.use(bodyParser.json({ limit: '16mb'}));
+app.use(bodyParser.json({ limit: '16mb' }));
 app.use(bodyParser.urlencoded({ extended: true, limit: '16mb' }));
+app.use(multer({
+  limits: {
+    files: 1,
+    fileSize: 16000000,
+  },
+  includeEmptyFields: true,
+  inMemory: true,
+}));
+// populate body parameter if we're doing a file upload
+app.use(function (req, res, next) {
+  _.extend(req.body, req.files);
+  next();
+});
 
 app.configure(feathers.rest(function (req, res) {
   res.format({
