@@ -13,6 +13,9 @@ var app = this.app = feathers();
 var passport = app.passport = require('passport');
 var mongoose = app.mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/tangelo');
+mongoose.connection.on('error', function (err) {
+  console.log(err);
+});
 
 app.set('host', process.env.IP || 'localhost');
 app.set('port', process.env.PORT || 80);
