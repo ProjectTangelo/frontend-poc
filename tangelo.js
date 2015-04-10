@@ -12,13 +12,13 @@ var app = this.app = feathers();
 
 var passport = app.passport = require('passport');
 var mongoose = app.mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/tangelo');
 
 app.set('host', process.env.IP || 'localhost');
 app.set('port', process.env.PORT || 80);
+app.set('db', process.env.DB || 'tangelo');
 app.set('cookie secret', process.env.cookie_secret || 'himitsu');
 app.set('cookie name', process.env.cookie_name || 'sid');
-app.set('logger', process.env.loglevel || 'dev');
+app.set('loglevel', process.env.LOGLEVEL || 'dev');
 app.set('x-powered-by', false);
 app.set('view engine', 'jade');
 app.set('views', process.cwd() + '/public/views');
@@ -26,7 +26,9 @@ app.set('default admin username', process.env.admin_username || 'admin');
 app.set('default admin password', process.env.admin_password || 'himitsu'); // will be hashed automatically
 app.set('default admin email', process.env.admin_email || 'admin@admin.admin');
 
-app.use(morgan('dev'));
+mongoose.connect('mongodb://localhost/' + app.get('db'));
+
+if (app.get('loglevel') !== '0') app.use(morgan(app.get('loglevel'))); // such one-liners #wow
 app.use(bodyParser.json({ limit: '16mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '16mb' }));
 
@@ -67,18 +69,4 @@ require('./routes');
 
 app.listen(app.get('port'), function () {
   console.log('Tangelo running on port %s', app.get('port'));
-});
-
-// Create default admin account
-app.service('user').findByUsername(app.get('default admin username'), function (err, user) {
-  if (err) {
-    throw new Error('Error while trying to add default admin account', err);
-  }
-  if (!user) {
-    console.log('Creating default admin user...');
-    app.service('user').createAdmin();
-  }
-  else {
-    console.log('Hello! Here\'s your admin account information:\n', user);
-  }
 });
