@@ -26,7 +26,6 @@ describe('Admin Tests', function() {
 
 
   describe('Login Spec', function(){
-    
     it('redirects to home page after login', function() {
       expect(browser.getTitle()).toEqual('tangelo');
       // expect(browser.getCurrentUrl()).toBe(baseURL + '/#/home');
@@ -43,7 +42,6 @@ describe('Admin Tests', function() {
   describe('Logout Spec', function(){
 
     it('lets admin logout', function(){
-      
       element(by.linkText('Sign Out')).click();
 
       var options = {
@@ -138,10 +136,8 @@ describe('Admin Tests', function() {
       }
 
       it('creates a single user', function(){
-        
         var newUserName = 'SingleUserAddTest';
         addUser( newUserName );
-        
         browser.setLocation('users');
         element.all(by.exactBinding('user.username')).filter(function(elem, index){
           return elem.getText().then(function(text){
@@ -333,7 +329,6 @@ describe('Admin Tests', function() {
     function addLesson( lessonName ) {
       var filePath = './admin.spec.js';
       var absolutePath = path.resolve(__dirname, filePath);
-      
       browser.setLocation('lessons/add');
 
       element(by.model('lesson.name')).sendKeys(lessonName);
@@ -365,11 +360,11 @@ describe('Admin Tests', function() {
           expect( filteredElements.length > 0 ).toBe(true);
       });
 
-      deleteLast();      
+      deleteLast();
     });
 
     it('opens a lesson', function(){
-      
+
       browser.setLocation('lessons');
 
       var lessonName = 'OpenLesson';
@@ -381,7 +376,6 @@ describe('Admin Tests', function() {
       expect(browser.getCurrentUrl()).toContain(baseURL + '/#/lessons/');
       expect(browser.getCurrentUrl()).toNotBe(baseURL + '/#/lessons');
 
-      
       browser.setLocation('lessons');
       deleteLast();
 
@@ -411,7 +405,6 @@ describe('Admin Tests', function() {
 
 
   describe('User Submissions Spec', function(){
-    
     it('views submissions', function(){
 
     });

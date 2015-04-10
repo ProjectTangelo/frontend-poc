@@ -1,6 +1,7 @@
 exports.config = {
 	seleniumAddress: 'http://localhost:4444/wd/hub',
-	specs: ['specs/*.spec.js'],
+	// specs: ['specs/*.spec.js']
+	specs: ['specs/admin.spec.js']
 
 	/*
 	// Logs in as the admin user before every test. Don't use it because there are tests for the basic user.
