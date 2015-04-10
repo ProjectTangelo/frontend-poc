@@ -1,11 +1,15 @@
+var request = require('request');
+
+var baseURL = 'http://33.33.33.10';
+
 describe('Basic User Tests', function(){
-  
+
   // TODO: Create a default basic user to login with.
   // Login as a basic user
   beforeEach(function() {
-    browser.get('http://33.33.33.10/login.html');
-    element(by.id('user-username')).sendKeys('admin');
-    element(by.id('user-password')).sendKeys('himitsu');
+    browser.get(baseURL + '/login.html');
+    element(by.id('user-username')).sendKeys('Ed');
+    element(by.id('user-password')).sendKeys('shadow');
     element(by.buttonText('Submit')).click();
 
     browser.driver.wait(function(){
@@ -15,9 +19,9 @@ describe('Basic User Tests', function(){
     }, 2000);
   });
 
+  //Login test for user
+  describe('Login Spec User', function(){
 
-  describe('Login Spec', function(){
-    
     it('redirects to home page after login', function() {
       expect(browser.getTitle()).toEqual('tangelo');
     });
@@ -29,4 +33,65 @@ describe('Basic User Tests', function(){
 
   });
 
+  /*//Logging out as a user, does not work
+  describe('Logout Spec User', function(){
+
+    it('lets admin logout', function(){
+
+      element(by.linkText('Sign Out')).click();
+
+      var options = {
+        url: baseURL + '/user',
+        method: 'GET',
+        json: true
+      };
+
+      request(options, function(error, response, body){
+        expect( body.error.message ).toBe('Unauthorized');
+      });
+
+    });
+
+    // TODO: This fails because we just go directly to /logout to logout. No other routing is happening.
+    it('shows login page after logout', function(){
+      element(by.linkText('Sign Out')).click();
+
+      browser.driver.wait(function(){
+        return browser.driver.getCurrentUrl().then(function(url){
+          return url == baseURL + '/login.html';
+        });
+      }, 2000);
+
+      expect(browser.getCurrentUrl()).toBe(baseURL + '/login.html');
+    });
+
+  });
+  */
+
+  //
+  describe('Panel Tests', function(){
+
+    it('Submissions', function(){
+      element(by.linkText('Submissions')).click()
+      expect(browser.getCurrentUrl()).toBe(baseURL + '/#/submissions');
+      //test to be added later
+    });
+
+    it('Scratch Pad', function(){
+      element(by.linkText('ScratchPad')).click()
+      expect(browser.getCurrentUrl()).toBe(baseURL + '/#/scratch';
+      var randTxt = element(by.model('scratchText.value'));
+      rantTxt.sendKeys('Guns N Roses');
+      expect(randTxt.getAttribute('value')).toEqual('Guns N Roses');
+    });
+
+    it('Lesson Plans', function(){
+      element(by.linkText('Lesson Plans')).click()
+      expect(browser.getCurrentUrl()).toBe(baseURL + '/#/lesson');
+      var lessonEx = element.all(by.binding('value.name'));
+      expect(lessonEx.get(0).getText().toBe('Red Like Roses Part II'));
+    });
+
+  });
+  //
 });

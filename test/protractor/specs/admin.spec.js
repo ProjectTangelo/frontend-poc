@@ -24,7 +24,7 @@ describe('Admin Tests', function() {
 
 
   describe('Login Spec', function(){
-    
+
     it('redirects to home page after login', function() {
       expect(browser.getTitle()).toEqual('tangelo');
       // expect(browser.getCurrentUrl()).toBe(baseURL + '/#/home');
@@ -41,7 +41,7 @@ describe('Admin Tests', function() {
   describe('Logout Spec', function(){
 
     it('lets admin logout', function(){
-      
+
       element(by.linkText('Sign Out')).click();
 
       var options = {
@@ -120,7 +120,7 @@ describe('Admin Tests', function() {
 
 
   describe('User Submissions Spec', function(){
-    
+
     it('views submissions', function(){
 
     });
