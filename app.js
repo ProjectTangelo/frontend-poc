@@ -22,7 +22,7 @@ app.set('port', process.env.PORT || 80);
 app.set('SSL', process.env.SSL || false);
 app.set('cookie secret', process.env.cookie_secret || 'himitsu');
 app.set('cookie name', process.env.cookie_name || 'sid');
-app.set('logger', process.env.loglevel || 'dev');
+app.set('loglevel', process.env.LOGLEVEL || 'dev');
 app.set('x-powered-by', false);
 app.set('view engine', 'jade');
 app.set('views', process.cwd() + '/public/views');
@@ -30,7 +30,8 @@ app.set('default admin username', process.env.admin_username || 'admin');
 app.set('default admin password', process.env.admin_password || 'himitsu'); // will be hashed automatically
 app.set('default admin email', process.env.admin_email || 'admin@admin.admin');
 
-app.use(morgan('dev'));
+if (app.get('loglevel'))
+  app.use(morgan('dev'));
 app.use(bodyParser.json({ limit: '16mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '16mb' }));
 
@@ -69,7 +70,7 @@ require('./api/');
 // Initialize routes
 require('./routes');
 
-
+// TODO - remove
 // Create default admin account
 app.service('user').findByUsername(app.get('default admin username'), function (err, user) {
   if (err) {

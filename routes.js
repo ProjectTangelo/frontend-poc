@@ -1,4 +1,4 @@
-var app = require('./tangelo');
+var app = require('./app');
 var middleware = require('./middleware');
 var feathers = require('feathers');
 

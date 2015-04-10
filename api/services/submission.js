@@ -1,7 +1,7 @@
-var app = require('../tangelo');
+var app = require('../../app');
 var feedback = app.service('feedback');
 
-var hooks = require('./hooks');
+var hooks = require('../hooks');
 var feathersMongoose = require('feathers-mongoose');
 var _ = require('lodash');
 

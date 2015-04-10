@@ -1,11 +1,11 @@
-var app = require('../tangelo');
+var app = require('../app');
 var _ = require('lodash');
 
-app.service('/user', require('./user'));
-app.service('/uploads', require('./files'));
-app.service('/lesson', require('./lesson'));
-app.service('/feedback', require('./feedback'));
-app.service('/submission', require('./submission'));
+app.service('/user', require('./services/user'));
+app.service('/uploads', require('./services/files'));
+app.service('/lesson', require('./services/lesson'));
+app.service('/feedback', require('./services/feedback'));
+app.service('/submission', require('./services/submission'));
 app.get('/mysubmissions', function (req, res) {
   var submissions = app.service('submission');
   submissions.model

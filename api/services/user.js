@@ -1,6 +1,6 @@
-var app = require('../tangelo');
-var util = require('./util');
-var hooks = require('./hooks');
+var app = require('../../app');
+var util = require('../util');
+var hooks = require('../hooks');
 var feathersMongoose = require('feathers-mongoose');
 var _ = require('lodash');
 

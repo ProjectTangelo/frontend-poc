@@ -1,4 +1,4 @@
-var app = require('../../tangelo');
+var app = require('../../app');
 var passport = app.passport;
 var util = require('../util');
 var LocalStrategy = require('passport-local').Strategy;

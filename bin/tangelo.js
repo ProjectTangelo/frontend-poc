@@ -1,7 +1,9 @@
-var tangelo = require('../tangelo');
+// TODO - require('tangelo') via package.json's main?
+var tangelo = require('../app');
 
 var welcome = function () {
-  if (tangelo.get('loglevel') > 0) {
+  console.log(tangelo.get('loglevel'));
+  if (tangelo.get('loglevel')) {
     console.log('Tangelo running on port %s', tangelo.get('port'));
   }
 }
