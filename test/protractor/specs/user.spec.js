@@ -68,7 +68,7 @@ describe('Basic User Tests', function(){
   });
   */
 
-  //
+  //Testing the panels
   describe('Panel Tests', function(){
 
     it('Submissions', function(){
@@ -89,7 +89,7 @@ describe('Basic User Tests', function(){
       element(by.linkText('Lesson Plans')).click()
       expect(browser.getCurrentUrl()).toBe(baseURL + '/#/lesson');
       var lessonEx = element.all(by.binding('value.name'));
-      expect(lessonEx.get(0).getText().toBe('Red Like Roses Part II'));
+      expect(lessonEx.count()).toBeGreaterThan(0);
     });
 
   });
