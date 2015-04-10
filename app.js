@@ -19,6 +19,7 @@ mongoose.connection.on('error', function (err) {
 
 app.set('host', process.env.IP || 'localhost');
 app.set('port', process.env.PORT || 80);
+app.set('SSL', process.env.SSL || false);
 app.set('cookie secret', process.env.cookie_secret || 'himitsu');
 app.set('cookie name', process.env.cookie_name || 'sid');
 app.set('logger', process.env.loglevel || 'dev');
@@ -68,9 +69,6 @@ require('./api/');
 // Initialize routes
 require('./routes');
 
-app.listen(app.get('port'), function () {
-  console.log('Tangelo running on port %s', app.get('port'));
-});
 
 // Create default admin account
 app.service('user').findByUsername(app.get('default admin username'), function (err, user) {
