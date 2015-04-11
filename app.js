@@ -13,9 +13,13 @@ var app = this.app = feathers();
 var passport = app.passport = require('passport');
 var mongoose = app.mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/tangelo');
+mongoose.connection.on('error', function (err) {
+  console.log(err);
+});
 
 app.set('host', process.env.IP || 'localhost');
 app.set('port', process.env.PORT || 80);
+app.set('SSL', process.env.SSL || false);
 app.set('cookie secret', process.env.cookie_secret || 'himitsu');
 app.set('cookie name', process.env.cookie_name || 'sid');
 app.set('logger', process.env.loglevel || 'dev');
@@ -65,12 +69,15 @@ require('./api/');
 // Initialize routes
 require('./routes');
 
+<<<<<<< HEAD:tangelo.js
 require('https').createServer({
   key: fs.readFileSync('/opt/server/key.pem'),
   cert: fs.readFileSync('/opt/server/cert.pem'),
 }, app).listen(443, function () {
   console.log('Tangelo running on port %s', app.get('port'));
 });
+=======
+>>>>>>> 32c355a076448045821f5d700a42543529bbba51:app.js
 
 /*
 app.listen(app.get('port'), function () {
