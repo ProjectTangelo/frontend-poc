@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var morgan = require('morgan');
 var connectMongo = require('connect-mongo');
 var _ = require('lodash');
-
+var fs = require('fs');
 var app = this.app = feathers();
 
 var passport = app.passport = require('passport');
@@ -65,10 +65,18 @@ require('./api/');
 // Initialize routes
 require('./routes');
 
-app.listen(app.get('port'), function () {
+require('https').createServer({
+  key: fs.readFileSync('/opt/server/key.pem'),
+  cert: fs.readFileSync('/opt/server/cert.pem'),
+}, app).listen(443, function () {
   console.log('Tangelo running on port %s', app.get('port'));
 });
 
+/*
+app.listen(app.get('port'), function () {
+  console.log('Tangelo running on port %s', app.get('port'));
+});
+*/
 // Create default admin account
 app.service('user').findByUsername(app.get('default admin username'), function (err, user) {
   if (err) {
