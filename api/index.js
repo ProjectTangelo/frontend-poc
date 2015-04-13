@@ -3,7 +3,10 @@ var _ = require('lodash');
 var winston = require('winston');
 
 app.service('/user', require('./services/user'));
-app.service('/uploads', require('./services/files'));
+
+app.get('/uploads/:id', require('./uploads'));
+app.service('/file', require('./file'));
+
 app.service('/lesson', require('./services/lesson'));
 app.service('/feedback', require('./services/feedback'));
 app.service('/submission', require('./services/submission'));
@@ -24,28 +27,6 @@ app.get('/mysubmissions', function (req, res) {
     })
 });
 
-
-// var FileService = require('./files');
-
-/*
-app.post('/upload', function(req, res) {
-	console.log('Uploads');
-	console.log( req.body );
-	console.log( req.files );
-	//res.status(204).end();
-});
-
-*/
-/*
-app.get('/lesson/:id', function(req, res) {
-  // var rstream = fs.createReadStream(dirname + '/' + path);
-    FileService.get(req.params['id'], null, function(err, result){
-      res.set('Content-Type', result.file.type);
-      res.send( result.content );
-    });
-  // res.send( req.params['id'] );
-});
-*/
 
 app.post('/login', require('./auth/login'));
 app.get('/logout', require('./auth/logout'));
