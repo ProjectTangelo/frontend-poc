@@ -3,10 +3,13 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     mocha: {
-      options: {
-        colors: true,
-        bail: true,
-        timeout: 10000,
+      test: {
+        src: ['./test/mocha/**/*.js'],
+        options: {
+          colors: true,
+          bail: true,
+          timeout: 10000,
+        }
       }
     },
     protractor: {

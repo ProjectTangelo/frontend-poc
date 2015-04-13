@@ -1,9 +1,9 @@
 console.log('Starting server...');
-var tangelo = require('../app');
+var tangelo = require('../../app');
 
 before(function (done) {
   tangelo.mongoose.connection.on('open', function () {
-    console.log('Resetting database...');
+    console.log('Resetting database <%s>...', tangelo.get('db'));
     tangelo.mongoose.connection.db.dropDatabase(function () {
       tangelo.service('user').createAdmin(function () {
         console.log('...done!');
@@ -44,4 +44,11 @@ describe('API', function () {
     });
   });
 
+});
+
+after(function (done) {
+  tangelo.mongoose.connection.close(function () {
+    console.log('...finished!');
+    done();
+  });
 });
