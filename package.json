@@ -30,7 +30,8 @@
     "mocha": "^2.2.4",
     "should": "^5.2.0",
     "superagent": "^1.1.0",
-    "supertest": "^0.15.0"
+    "supertest": "^0.15.0",
+    "protractor": "~2.0.0"
   },
   "engines": {
     "node": ">=0.10.22",
@@ -38,7 +39,7 @@
   },
   "scripts": {
     "start": "sudo node ./bin/tangelo.js",
-    "test": "sudo ./node_modules/protractor/bin/webdriver-manager update && sudo DB=testerino ./node_modules/grunt-cli/bin/grunt test"
+    "test": "./node_modules/protractor/bin/webdriver-manager update && ./node_modules/.bin/gulp"
   },
   "main": "app.js"
 }

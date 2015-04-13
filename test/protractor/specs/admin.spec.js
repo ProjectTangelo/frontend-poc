@@ -343,6 +343,14 @@ describe('Admin Tests', function() {
     }
 
     function deleteLast() {
+      browser.setLocation('lessons');
+      
+      browser.driver.wait(function(){
+        return browser.driver.getCurrentUrl().then(function(url){
+          return url == baseURL + '/#/lessons';
+        });
+      }, defaultTimeOut);
+
       // Deletes the lesson.
       element.all(by.id('delete-button')).last().click();
       browser.refresh();
