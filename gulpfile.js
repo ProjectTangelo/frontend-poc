@@ -6,6 +6,7 @@ var protractor = require('gulp-protractor').protractor;
 
 gulp.task('mocha', function (done) {
   process.env.DB = process.env.DB || 'test';
+  process.env.LOGLEVEL = process.env.LOGLEVEL || 'info';
   gulp.src('./test/mocha/**/*.js')
     .pipe(mocha({
       colors: true,
@@ -20,5 +21,5 @@ gulp.task('test', function (done) {
 });
 
 gulp.task('default', function (done) {
-  gulp.run('test', done);
+  runSequence('test', done);
 });
