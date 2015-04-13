@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "sudo node tangelo.js",
-    "test": "sudo DB=testerino LOGLEVEL=0 ./node_modules/.bin/mocha --colors --bail --timeout 10000"
+    "test": "sudo DB=testerino ./node_modules/.bin/mocha --colors --bail --timeout 10000"
   },
   "main": "tangelo.js"
 }
