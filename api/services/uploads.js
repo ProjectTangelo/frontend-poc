@@ -1,4 +1,4 @@
-var app = require('../tangelo');
+var app = require('../../app');
 var _ = require('lodash');
 
 var route = function (req, res) {

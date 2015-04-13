@@ -63,7 +63,7 @@ _.extend(service, {
     return this.model.findOne({ 'username': username }, '-__v', callback);
   },
   // TODO - make less ugly
-  createAdmin: function () {
+  createAdmin: function (callback) {
     var admin = new this.model({
       username: app.get('default admin username'),
       password: app.get('default admin password'),
@@ -73,7 +73,7 @@ _.extend(service, {
       if (err) {
         throw new Error('Error while creating default admin account', err);
       }
-      console.log('...done! Here\'s your admin account information:\n', data);
+      if (callback) callback();
     });
   },
   // admin is inherently true/true

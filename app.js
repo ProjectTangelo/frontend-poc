@@ -20,6 +20,7 @@ mongoose.connection.on('error', function (err) {
 
 app.set('host', process.env.IP || 'localhost');
 app.set('port', process.env.PORT || 80);
+app.set('db', process.env.DB || 'tangelo');
 app.set('SSL', process.env.SSL || false);
 app.set('cookie secret', process.env.cookie_secret || 'himitsu');
 app.set('cookie name', process.env.cookie_name || 'sid');
@@ -75,17 +76,3 @@ require('./api/');
 
 // Initialize routes
 require('./routes');
-
-// Create default admin account
-app.service('user').findByUsername(app.get('default admin username'), function (err, user) {
-  if (err) {
-    throw new Error('Error while trying to add default admin account', err);
-  }
-  if (!user) {
-    winston.log('Creating default admin user...');
-    app.service('user').createAdmin();
-  }
-  else {
-    winston.log('Hello! Here\'s your admin account information:\n', user);
-  }
-});

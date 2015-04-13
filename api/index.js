@@ -4,8 +4,8 @@ var winston = require('winston');
 
 app.service('/user', require('./services/user'));
 
-app.get('/uploads/:id', require('./uploads'));
-app.service('/file', require('./file'));
+app.get('/uploads/:id', require('./services/uploads'));
+app.service('/file', require('./services/file'));
 
 app.service('/lesson', require('./services/lesson'));
 app.service('/feedback', require('./services/feedback'));
