@@ -13,8 +13,8 @@ if (tangelo.get('SSL')) {
   var fs = require('fs');
 
   var credentials = {
-    key: fs.readFileSync('AYY LMAO'),
-    cert: fs.readFileSync('AYY L M A O'),
+    key: fs.readFileSync('key.pem'),
+    cert: fs.readFileSync('cert.pem'),
   };
 
   require('https')

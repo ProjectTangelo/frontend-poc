@@ -8,7 +8,6 @@ var morgan = require('morgan');
 var connectMongo = require('connect-mongo');
 var winston = require('winston');
 var _ = require('lodash');
-
 var app = this.app = feathers();
 
 var passport = app.passport = require('passport');
@@ -73,7 +72,6 @@ require('./api/');
 // Initialize routes
 require('./routes');
 
-// TODO - remove
 // Create default admin account
 app.service('user').findByUsername(app.get('default admin username'), function (err, user) {
   if (err) {
