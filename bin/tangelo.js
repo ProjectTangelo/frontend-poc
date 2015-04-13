@@ -1,10 +1,10 @@
 // TODO - require('tangelo') via package.json's main?
 var tangelo = require('../app');
+var winston = require('winston');
 
 var welcome = function () {
-  console.log(tangelo.get('loglevel'));
   if (tangelo.get('loglevel')) {
-    console.log('Tangelo running on port %s', tangelo.get('port'));
+    winston.info('Tangelo running on port %s', tangelo.get('port'));
   }
 }
 

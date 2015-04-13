@@ -1,5 +1,6 @@
 var app = require('../app');
 var _ = require('lodash');
+var winston = require('winston');
 
 app.service('/user', require('./services/user'));
 app.service('/uploads', require('./services/files'));
@@ -57,7 +58,7 @@ app.all('/whoami', function (req, res) {
 });
 
 app.use(function errorHandler (err, req, res, next) {
-  console.log(err);
+  winston.error(err);
   res.json({
     error: err
   });
