@@ -1,5 +1,6 @@
 var gulp = require('gulp');
 var mocha = require('gulp-mocha');
+var runSequence = require('run-sequence');
 var protractor = require('gulp-protractor').protractor;
 
 var webdriver_standalone = require("gulp-protractor").webdriver_standalone;
@@ -7,6 +8,8 @@ var webdriver_standalone = require("gulp-protractor").webdriver_standalone;
 gulp.task('webdriver_standalone', webdriver_standalone);
 
 gulp.task('mocha', function (done) {
+  process.env.DB = process.env.DB || 'test';
+  process.env.LOGLEVEL = process.env.LOGLEVEL || 'info';
   gulp.src('./test/mocha/**/*.js')
     .pipe(mocha({
       colors: true,
@@ -28,5 +31,12 @@ gulp.task('protractor', function(){
   	.on('error', function(e) { throw e });
 });
 
-gulp.task('default', ['webdriver_standalone', 'protractor']);
-// gulp.task('default', ['webdriver_standalone', 'protractor'¸ 'mocha']);
+gulp.task('test', function (done) {
+  runSequence('mocha', done);
+});
+
+gulp.task('default', function (done) {
+  runSequence('test', done);
+});
+
+gulp.task('test-protractor', ['mocha', 'webdriver_standalone', 'protractor']);

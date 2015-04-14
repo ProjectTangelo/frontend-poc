@@ -1,6 +1,10 @@
 {
   "name": "tangelo",
+  "description": "Server for directing the API calls and serving the content for Tangelo's master server",
   "version": "0.0.2",
+  "bin": {
+    "tangelo": "./bin/tangelo"
+  },
   "private": true,
   "dependencies": {
     "bcryptjs": "^2.1.0",
@@ -18,7 +22,6 @@
     "multer": "^0.1.8",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "require-directory": "^2.1.0",
     "scmp": "^1.0.0",
     "winston": "^1.0.0"
   },
@@ -28,10 +31,11 @@
     "gulp-mocha": "^2.0.1",
     "gulp-protractor": "^1.0.0",
     "mocha": "^2.2.4",
-    "should": "^5.2.0",
+    "run-sequence": "^1.0.2",
     "superagent": "^1.1.0",
     "supertest": "^0.15.0",
-    "protractor": "~2.0.0"
+    "protractor": "~2.0.0",
+    "should": "~5.2.0"
   },
   "engines": {
     "node": ">=0.10.22",
@@ -39,7 +43,7 @@
   },
   "scripts": {
     "start": "sudo node ./bin/tangelo.js",
-    "test": "./node_modules/protractor/bin/webdriver-manager update && ./node_modules/.bin/gulp"
+    "test": "./node_modules/protractor/bin/webdriver-manager update && ./node_modules/.bin/gulp test-protractor"
   },
   "main": "app.js"
 }
