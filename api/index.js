@@ -39,7 +39,7 @@ app.all('/whoami', function (req, res) {
 });
 
 app.use(function errorHandler (err, req, res, next) {
-  winston.error(err);
+  // winston.error(err);
   res.json({
     error: err
   });

@@ -26,16 +26,17 @@
     "winston": "^1.0.0"
   },
   "devDependencies": {
+    "bluebird": "^2.9.24",
     "faker": "^2.1.2",
     "gulp": "^3.8.11",
     "gulp-mocha": "^2.0.1",
     "gulp-protractor": "^1.0.0",
     "mocha": "^2.2.4",
-    "run-sequence": "^1.0.2",
-    "superagent": "^1.1.0",
-    "supertest": "^0.15.0",
     "protractor": "~2.0.0",
-    "should": "~5.2.0"
+    "run-sequence": "^1.0.2",
+    "should": "^6.0.0",
+    "superagent": "^1.1.0",
+    "supertest": "^0.15.0"
   },
   "engines": {
     "node": ">=0.10.22",
@@ -43,7 +44,7 @@
   },
   "scripts": {
     "start": "sudo node ./bin/tangelo.js",
-    "test": "./node_modules/protractor/bin/webdriver-manager update && ./node_modules/.bin/gulp test-protractor"
+    "test": "./node_modules/.bin/webdriver-manager update && ./node_modules/.bin/gulp test"
   },
   "main": "app.js"
 }
