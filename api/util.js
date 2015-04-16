@@ -1,6 +1,4 @@
 var bcrypt = require('bcryptjs');
-// TODO - remove?
-var scmp = require('scmp');
 
 exports = module.exports = {
   hash: function (string, callback) {

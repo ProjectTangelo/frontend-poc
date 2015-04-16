@@ -1,4 +1,4 @@
-var request = require('request');
+var request = require('supertest');
 var path = require('path');
 
 var baseURL = 'http://33.33.33.10';
@@ -50,9 +50,11 @@ describe('Admin Tests', function() {
         json: true
       };
 
-      request(options, function(error, response, body){
-        expect( body.error.message ).toBe('Unauthorized');
-      });
+      request
+        .get(baseURL + '/user')
+        .expect(function (res) {
+          res.body.error.message.to.be.equal('Unauthorized');
+        });
 
     });
 
@@ -344,7 +346,7 @@ describe('Admin Tests', function() {
 
     function deleteLast() {
       browser.setLocation('lessons');
-      
+
       browser.driver.wait(function(){
         return browser.driver.getCurrentUrl().then(function(url){
           return url == baseURL + '/#/lessons';

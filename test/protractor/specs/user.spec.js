@@ -1,4 +1,4 @@
-var request = require('request');
+var request = require('supertest');
 
 var baseURL = 'http://33.33.33.10';
 
@@ -83,14 +83,14 @@ describe('Basic User Tests', function(){
       randTxt.sendKeys('Guns N Roses');
       expect(randTxt.getAttribute('value')).toEqual('Guns N Roses');
     });
-      
+
     it('Lesson Plans', function(){
       element(by.linkText('Lesson Plans')).click();
       expect(browser.getCurrentUrl()).toBe(baseURL + '/#/lesson');
       var lessonEx = element.all(by.binding('value.name'));
       expect(lessonEx.count()).toBeGreaterThan(0);
     });
-    
+
   });
   //
 });
