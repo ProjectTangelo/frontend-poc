@@ -26,6 +26,7 @@
     "winston": "^1.0.0"
   },
   "devDependencies": {
+    "bluebird": "^2.9.24",
     "faker": "^2.1.2",
     "gulp": "^3.8.11",
     "gulp-mocha": "^2.0.1",
