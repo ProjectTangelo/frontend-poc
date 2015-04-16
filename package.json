@@ -2,6 +2,7 @@
   "name": "tangelo",
   "description": "Server for directing the API calls and serving the content for Tangelo's master server",
   "version": "0.0.2",
+  "main": "app.js",
   "bin": {
     "tangelo": "./bin/tangelo"
   },
@@ -13,11 +14,11 @@
     "dotenv": "~0.4.0",
     "feathers": "^1.0.2",
     "feathers-hooks": "^0.5.0",
-    "feathers-mongoose": "git://github.com/tylergoodman/feathers-mongoose#78960d9276e8aca93044a7ea62d49deee6fd8cdd",
+    "feathers-mongoose": "git://github.com/tylergoodman/feathers-mongoose",
     "feathers-passport": "^0.1.2",
     "jade": "^1.9.2",
     "lodash": "^3.1.0",
-    "mongoose": "^3.8.24",
+    "mongoose": "^4.0.1",
     "morgan": "^1.5.1",
     "multer": "^0.1.8",
     "passport": "^0.2.1",
@@ -25,13 +26,10 @@
     "winston": "^1.0.0"
   },
   "devDependencies": {
-    "bluebird": "^2.9.24",
     "faker": "^2.1.2",
     "gulp": "^3.8.11",
     "gulp-mocha": "^2.0.1",
-    "gulp-protractor": "^1.0.0",
     "mocha": "^2.2.4",
-    "protractor": "~2.0.0",
     "run-sequence": "^1.0.2",
     "should": "^6.0.0",
     "supertest": "^0.15.0"
@@ -42,7 +40,14 @@
   },
   "scripts": {
     "start": "sudo node ./bin/tangelo.js",
-    "test": "sudo ./node_modules/.bin/webdriver-manager update && sudo ./node_modules/.bin/gulp test"
+    "test": "sudo ./node_modules/.bin/gulp test"
   },
-  "main": "app.js"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ProjectTangelo/frontend-poc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ProjectTangelo/frontend-poc/issues"
+  },
+  "homepage": "https://github.com/ProjectTangelo/frontend-poc"
 }

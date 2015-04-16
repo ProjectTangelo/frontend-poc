@@ -1,5 +1,5 @@
 console.log('Starting server...');
-var tangelo = require('../../app');
+var tangelo = require('../app');
 
 before(function (done) {
   tangelo.mongoose.connection.on('open', function () {
