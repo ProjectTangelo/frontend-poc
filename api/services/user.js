@@ -6,6 +6,7 @@ var _ = require('lodash');
 
 
 // TODO - validation - https://www.npmjs.com/package/mongoose-validator
+// TODO - pagination - someday . . .
 
 var schema = {
   'username': {
@@ -28,6 +29,7 @@ var schema = {
     'type': String,
     'required': true,
     'trim': true,
+    'select': false,
   },
   'email': {
     'type': String,
@@ -60,7 +62,7 @@ var service = feathersMongoose('user', schema, app.mongoose);
 
 _.extend(service, {
   findByUsername: function (username, callback) {
-    return this.model.findOne({ 'username': username }, '-__v', callback);
+    return this.model.findOne({ 'username': username }, '+password', callback);
   },
   // TODO - make less ugly
   createAdmin: function (callback) {
