@@ -142,24 +142,6 @@ describe('/user', function () {
         .end(done);
     }
 
-    it('requires username', function (done) {
-      admin.agent
-        .post('/user')
-        .send(_.omit(makeCredentials(), 'username'))
-        .expect(function (res) {
-          res.body.error.name.should.equal('ValidationError');
-        })
-        .end(done);
-    });
-    it('requires password', function (done) {
-      admin.agent
-        .post('/user')
-        .send(_.omit(makeCredentials(), 'password'))
-        .expect(function (res) {
-          res.body.error.name.should.equal('ValidationError');
-        })
-        .end(done);
-    });
     it('admin can CREATE users', function (done) {
       admin.agent
         .post('/user')
@@ -174,6 +156,35 @@ describe('/user', function () {
             done();
           });
         });
+    });
+
+    it('requires username', function (done) {
+      admin.agent
+        .post('/user')
+        .send(_.omit(makeCredentials(), 'username'))
+        .expect(function (res) {
+          res.body.error.name.should.equal('ValidationError');
+        })
+        .end(done);
+    });
+    it('requires unique username', function (done) {
+      admin.agent
+        .post('/user')
+        .send(user.credentials)
+        .expect(function (res) {
+          res.body.should.have.property('error');
+          res.body.error.name.should.be.equal('MongoError');
+        })
+        .end(done);
+    });
+    it('requires password', function (done) {
+      admin.agent
+        .post('/user')
+        .send(_.omit(makeCredentials(), 'password'))
+        .expect(function (res) {
+          res.body.error.name.should.equal('ValidationError');
+        })
+        .end(done);
     });
     it('requires admin', function (done) {
       user.agent
@@ -273,7 +284,28 @@ describe('/user', function () {
   });
 
   describe('FIND', function () {
-
+    // GET /path?conditions={}&fields="field1 field 2"&options={"sort":{"field":-1}}
+    it('admin can FIND users', function (done) {
+      admin.agent
+        .get('/user?conditions={"username":"' + user.credentials.username + '"}')
+        .expect(function (res) {
+          res.body.should.be.an.Array;
+          res.body.should.containEql(_.omit(user.credentials, 'password'));
+        })
+        .end(done);
+    });
+    it('requires admin', function (done) {
+      user.agent
+        .get('/user?conditions={"username":"' + admin.credentials.username + '"}')
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
+        })
+        .end(done);
+    });
   });
 });
 
