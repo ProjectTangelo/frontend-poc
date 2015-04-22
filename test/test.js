@@ -19,7 +19,34 @@ var should = require('should');
 var faker = require('faker');
 var _ = require('lodash');
 
-// helpers
+
+function makeCredentials (creds) {
+  if (!creds)
+    creds = {};
+
+  return _.assign(creds, {
+    'username': faker.internet.userName(),
+    'name_first': faker.name.firstName(),
+    'name_last': faker.name.lastName(),
+    'password': faker.internet.password(),
+    'email': faker.internet.email().toLowerCase(),
+    'type': 'user',
+    'node_id': _.random(0, 1000000) + '',
+    'container_id': _.random(0, 1000000) + '',
+  });
+}
+
+var admin = {
+  agent: request.agent(tangelo),
+  credentials: {
+    username: tangelo.get('default admin username'),
+    password: tangelo.get('default admin password'),
+  },
+};
+var user = {
+  agent: request.agent(tangelo),
+  credentials: makeCredentials(),
+};
 
 describe('auth', function () {
   var server = request.agent(tangelo);
@@ -82,17 +109,6 @@ describe('auth', function () {
 });
 
 describe('/user', function () {
-  var admin = {
-    agent: request.agent(tangelo),
-    credentials: {
-      username: tangelo.get('default admin username'),
-      password: tangelo.get('default admin password'),
-    },
-  };
-  var user = {
-    agent: request.agent(tangelo),
-    credentials: makeCredentials(),
-  };
 
   function login (user) {
     return new Promise(function (resolve, reject) {
@@ -103,22 +119,6 @@ describe('/user', function () {
           if (err) reject(err);
           resolve(res.body.success);
         });
-    });
-  }
-
-  function makeCredentials (creds) {
-    if (!creds)
-      creds = {};
-
-    return _.assign(creds, {
-      'username': faker.internet.userName(),
-      'name_first': faker.name.firstName(),
-      'name_last': faker.name.lastName(),
-      'password': faker.internet.password(),
-      'email': faker.internet.email().toLowerCase(),
-      'type': 'user',
-      'node_id': _.random(0, 1000000) + '',
-      'container_id': _.random(0, 1000000) + '',
     });
   }
 
@@ -353,6 +353,22 @@ describe('/user', function () {
             })
             .end(done);
         });
+    });
+  });
+});
+
+describe('/submission', function () {
+  describe('CREATE', function () {
+    it('users can CREATE submissions', function (done) {
+      var content = faker.lorem.paragraph();
+      user.agent
+        .post('/submission')
+        .send({ content: content })
+        .expect(function (res) {
+          res.body.content.should.equal(content);
+          res.body.owner.should.equal(user.credentials._id);
+        })
+        .end(done);
     });
   });
 });
