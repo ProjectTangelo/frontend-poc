@@ -4,17 +4,14 @@ var app = require('../../app');
 var passport = app.passport;
 var util = require('../util');
 var LocalStrategy = require('passport-local').Strategy;
-var winston = require('winston');
 var _ = require('lodash');
 
 
 passport.serializeUser(function(user, callback) {
-  winston.debug('Serialized user %s', user);
   callback(null, user._id);
 });
 
 passport.deserializeUser(function(id, callback) {
-  winston.debug('Deserialized user %s', id);
   app.service('user').model.findById(id, '', {}, function (err, data) {
       callback(err, data);
   });
@@ -24,7 +21,6 @@ passport.deserializeUser(function(id, callback) {
 passport.use(new LocalStrategy(function (username, password, callback) {
   // console.log('hello from localstrategy', username, password);
   app.service('user').findByUsername(username, function (err, user) {
-    winston.debug(err, user);
     if (err) {
       return callback(err);
     }
@@ -34,7 +30,6 @@ passport.use(new LocalStrategy(function (username, password, callback) {
       });
     }
     util.matches(password, user.password, function (err, matches) {
-      winston.debug(err, matches);
       if (err) {
         return callback(err);
       }

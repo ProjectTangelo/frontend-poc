@@ -130,18 +130,6 @@ describe('/user', function () {
   });
 
   describe('CREATE', function () {
-    function requires (user, property, err_message, done) {
-      var new_user = makeCredentials();
-      delete new_user[property];
-      user.agent
-        .post('/user')
-        .send(new_user)
-        .expect(function (res) {
-          res.body.error.message.should.equal(err_message);
-        })
-        .end(done);
-    }
-
     it('admin can CREATE users', function (done) {
       admin.agent
         .post('/user')
@@ -305,6 +293,66 @@ describe('/user', function () {
           });
         })
         .end(done);
+    });
+  });
+
+  describe('UPDATE', function () {
+    it('admin can UPDATE users', function (done) {
+      var email = faker.internet.email();
+      admin.agent
+        .put('/user/' + user.credentials._id)
+        .type('urlencoded')
+        .send({ email: email })
+        .expect(function (res) {
+          res.body.email.should.be.equal(email);
+          user.credentials.email = email;
+        })
+        .end(done);
+    });
+    it('user can UPDATE themselves', function (done) {
+      var name = faker.name.firstName();
+      user.agent
+        .put('/user/' + user.credentials._id)
+        .type('urlencoded')
+        .send({ name_first: name })
+        .expect(function (res) {
+          res.body.name_first.should.be.equal(name);
+          user.credentials.name_first = name;
+        })
+        .end(done);
+    });
+    it('user can\'t UPDATE some protected properties', function (done) {
+      // make ourselves an admin heh heh heh
+      user.agent
+        .put('/user/' + user.credentials._id)
+        .type('urlencoded')
+        .send({ type: 'admin' })
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'You are not authorized to write on field: type'
+            }
+          });
+        })
+        .end(done);
+    });
+  });
+
+  describe('REMOVE', function () {
+    it('admins can REMOVE user', function (done) {
+      var user = makeCredentials();
+      admin.agent
+        .post('/user')
+        .send(user)
+        .end(function (err, res) {
+          _.extend(user, _.omit(res.body, 'password'));
+          admin.agent
+            .del('/user/' + user._id)
+            .expect(function (res) {
+              res.body.should.eql(_.omit(user, 'password'));
+            })
+            .end(done);
+        });
     });
   });
 });
