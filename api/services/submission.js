@@ -52,6 +52,27 @@ function addOwner(hook, next) {
   //   });
 }
 
+function requireSelfOrAdmin (hook, next) {
+  if (hook.params.user.type === 'admin')
+    return next();
+
+  if (_.isArray(hook.result)) {
+    for (var i = 0; i < hook.result.length; i++)
+      if (hook.params.user._id.toString() !== hook.result[i]._doc.owner._id.toString())
+        return next({
+          message: 'Unauthorized',
+        });
+      return next();
+  }
+
+  if (hook.params.user._id.toString() === hook.result._doc.owner._id.toString())
+    return next();
+
+  next({
+    message: 'Unauthorized',
+  });
+}
+
 _.extend(service, {
   find: function (params, callback) {
     if (typeof params === 'function') {
@@ -87,8 +108,8 @@ _.extend(service, {
     remove: [hooks.requireAdmin],
   },
   after: {
-    // get: [hooks.requireSelfOrAdminByOwner],
-    // find: [hooks.requireSelfOrAdminByOwner],
+    get: [requireSelfOrAdmin],
+    find: [requireSelfOrAdmin],
     create: [],
     update: [],
     remove: [],

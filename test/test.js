@@ -336,16 +336,33 @@ describe('/user', function () {
         })
         .end(done);
     });
+    it('user can\'t UPDATE others', function (done) {
+      admin.agent
+        .post('/user')
+        .send(makeCredentials())
+        .end(function (err, res) {
+          user.agent
+            .put('/user/' + res.body._id)
+            .type('urlencoded')
+            .expect(function (res) {
+              res.body.should.eql({
+                error: {
+                  message: 'Unauthorized',
+                }
+              });
+            })
+            .end(done);
+        });
+    });
   });
 
   describe('REMOVE', function () {
     it('admins can REMOVE user', function (done) {
-      var user = makeCredentials();
       admin.agent
         .post('/user')
-        .send(user)
+        .send(makeCredentials())
         .end(function (err, res) {
-          _.extend(user, _.omit(res.body, 'password'));
+          var user = res.body;
           admin.agent
             .del('/user/' + user._id)
             .expect(function (res) {
@@ -354,10 +371,31 @@ describe('/user', function () {
             .end(done);
         });
     });
+    it('requires admin', function (done) {
+      var new_user = makeCredentials();
+      admin.agent
+        .post('/user')
+        .send(new_user)
+        .end(function (err, res) {
+          _.extend(new_user, _.omit(res.body, 'password'));
+          user.agent
+            .del('/user/' + new_user._id)
+            .expect(function (res) {
+              res.body.should.eql({
+                error: {
+                  message: 'Unauthorized',
+                }
+              });
+            })
+            .end(done);
+        });
+    });
   });
 });
 
 describe('/submission', function () {
+  var a_submission;
+
   describe('CREATE', function () {
     it('users can CREATE submissions', function (done) {
       var content = faker.lorem.paragraph();
@@ -367,6 +405,55 @@ describe('/submission', function () {
         .expect(function (res) {
           res.body.content.should.equal(content);
           res.body.owner.should.equal(user.credentials._id);
+          a_submission = res.body;
+        })
+        .end(done);
+    });
+  });
+
+  describe('GET', function () {
+    it('users can GET their own submissions by its ID', function (done) {
+      user.agent
+        .get('/submission/' + a_submission._id)
+        .expect(function (res) {
+          res.body.should.containEql(_.omit(a_submission, 'owner'));
+        })
+        .end(done);
+    });
+    it('users can\'t GET other people\'s submissions', function (done) {
+      admin.agent
+        .post('/submission')
+        .send({ content: faker.lorem.paragraph() })
+        .end(function (err, res) {
+          var submission = res.body;
+          user.agent
+            .get('/submission/' + submission._id)
+            .expect(function (res) {
+              res.body.should.eql({
+                error: {
+                  message: 'Unauthorized',
+                }
+              });
+            })
+            .end(done);
+        });
+    });
+    it('owner field is populated', function (done) {
+      admin.agent
+        .get('/submission/' + a_submission._id)
+        .expect(function (res) {
+          res.body.owner.should.be.eql(_.omit(user.credentials, 'password'));
+        })
+        .end(done);
+    });
+  });
+
+  describe('FIND', function () {
+    it('users can FIND their own submissions by their own ID', function (done) {
+      user.agent
+        .get('/submission?conditions={"owner":"' + user.credentials._id + '"}')
+        .expect(function (res) {
+          res.body.should.be.Array.with.length(1);
         })
         .end(done);
     });
