@@ -24,7 +24,7 @@ var service = feathersMongoose('feedback', schema, app.mongoose);
 
 // now this is callback hell
 function addToSubmission (hook, next) {
-  console.log("ADD TO SUBMISSION HOOK", hook);
+  // console.log("ADD TO SUBMISSION HOOK", hook);
   var submission = app.service('submission');
   submission.model.findById(hook.data.submission, function (err, submission) {
     var feedback_id = hook.result._doc._id;
@@ -58,7 +58,7 @@ function addToSubmission (hook, next) {
 }
 
 function removeFromSubmission (hook, next) {
-  console.log("REMOVE FROM SUBMISSION HOOK", hook);
+  // console.log("REMOVE FROM SUBMISSION HOOK", hook);
   var submission = app.service('submission');
   submission.model.findById(hook.result._doc.submission, function (err, submission) {
     if (err) {
@@ -105,15 +105,32 @@ _.extend(service, {
       .exec(callback);
   },
   before: {
-    get: [hooks.requireSelfOrAdminByOwner],
-    find: [hooks.requireSelfOrAdminByOwner],
+    get: [],
+    find: [],
     create: [hooks.requireSelfOrAdminByOwner, hooks.addCreatedAt],
     update: [hooks.requireSelfOrAdminByOwner],
     remove: [hooks.requireAdmin],
   },
   after: {
-    get: [],
-    find: [],
+    get: [function authorize (hook, next) {
+      if (!hook.result)
+        return next();
+      if (hook.params.user.type === 'admin')
+        return next();
+      if (hook.result.submission.owner.toString() === hook.params.user._id.toString())
+        return next();
+      next({
+        message: 'Unauthorized',
+      });
+    }],
+    find: [function filter (hook, next) {
+      if (hook.params.user.type !== 'admin' && hook.result) {
+        hook.result = _.filter(hook.result, function (feedback) {
+          return feedback.submission.owner.toString() === hook.params.user._id.toString();
+        });
+      }
+      next();
+    }],
     create: [addToSubmission],
     update: [],
     remove: [removeFromSubmission],

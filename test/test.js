@@ -130,7 +130,7 @@ describe('/user', function () {
   });
 
   describe('CREATE', function () {
-    it('admin can CREATE users', function (done) {
+    it('admin can create users', function (done) {
       admin.agent
         .post('/user')
         .send(user.credentials)
@@ -190,7 +190,7 @@ describe('/user', function () {
   });
 
   describe('GET', function () {
-    it('admin can GET users', function (done) {
+    it('admin can get users', function (done) {
       admin.agent
         .get('/user/' + user.credentials._id)
         .expect(function (res) {
@@ -210,7 +210,7 @@ describe('/user', function () {
         })
         .end(done);
     });
-    it('users can GET themselves', function (done) {
+    it('users can get themselves', function (done) {
       user.agent
         .get('/user/' + user.credentials._id)
         .expect(function (res) {
@@ -222,7 +222,7 @@ describe('/user', function () {
 
   describe('FIND', function () {
     // GET /path?conditions={}&fields="field1 field 2"&options={"sort":{"field":-1}}
-    it('admin can FIND users', function (done) {
+    it('admin can find users', function (done) {
       admin.agent
         .get('/user?conditions={"username":"' + user.credentials.username + '"}')
         .expect(function (res) {
@@ -246,7 +246,7 @@ describe('/user', function () {
   });
 
   describe('UPDATE', function () {
-    it('admin can UPDATE users', function (done) {
+    it('admin can update users', function (done) {
       var email = faker.internet.email();
       admin.agent
         .put('/user/' + user.credentials._id)
@@ -258,7 +258,7 @@ describe('/user', function () {
         })
         .end(done);
     });
-    it('user can UPDATE themselves', function (done) {
+    it('user can update themselves', function (done) {
       var name = faker.name.firstName();
       user.agent
         .put('/user/' + user.credentials._id)
@@ -270,7 +270,7 @@ describe('/user', function () {
         })
         .end(done);
     });
-    it('user can\'t UPDATE some protected properties', function (done) {
+    it('user can\'t update some protected properties', function (done) {
       // make ourselves an admin heh heh heh
       user.agent
         .put('/user/' + user.credentials._id)
@@ -306,7 +306,7 @@ describe('/user', function () {
   });
 
   describe('REMOVE', function () {
-    it('admins can REMOVE user', function (done) {
+    it('admins can remove user', function (done) {
       admin.agent
         .post('/user')
         .send(makeCredentials())
@@ -346,7 +346,7 @@ describe('/submission', function () {
   var admin_submission;
 
   describe('CREATE', function () {
-    it('users can CREATE submissions', function (done) {
+    it('users can create submissions', function (done) {
       var content = faker.lorem.paragraph();
       user.agent
         .post('/submission')
@@ -364,15 +364,14 @@ describe('/submission', function () {
         .post('/submission')
         .send({ content: content })
         .end(function (err, res) {
-          if (err) throw err;
           admin_submission = res.body;
-          done();
+          done(err);
         });
     });
   });
 
   describe('GET', function () {
-    it('users can GET their own submissions', function (done) {
+    it('users can get their own submissions', function (done) {
       user.agent
         .get('/submission/' + user_submission._id)
         .expect(function (res) {
@@ -380,7 +379,7 @@ describe('/submission', function () {
         })
         .end(done);
     });
-    it('users can\'t GET other people\'s submissions', function (done) {
+    it('users can\'t get other people\'s submissions', function (done) {
       user.agent
         .get('/submission/' + admin_submission._id)
         .expect(function (res) {
@@ -403,7 +402,7 @@ describe('/submission', function () {
   });
 
   describe('FIND', function () {
-    it('users can FIND their own submissions by their own ID', function (done) {
+    it('users can find their own submissions by their own ID', function (done) {
       user.agent
         .get('/submission?conditions={"owner":"' + user.credentials._id + '"}')
         .expect(function (res) {
@@ -412,7 +411,7 @@ describe('/submission', function () {
         })
         .end(done);
     });
-    it('users can\'t FIND other user\'s submissions', function (done) {
+    it('users can\'t find other user\'s submissions', function (done) {
       user.agent
         .get('/submission?conditions={"owner":"' + admin.credentials._id + '"}')
         .expect(function (res) {
@@ -423,7 +422,7 @@ describe('/submission', function () {
   });
 
   describe('UPDATE', function () {
-    it('admin can UPDATE anyone', function (done) {
+    it('admin can update anyone', function (done) {
       var new_content = faker.lorem.paragraph();
       admin.agent
         .put('/submission/' + user_submission._id)
@@ -435,7 +434,7 @@ describe('/submission', function () {
         })
         .end(done);
     });
-    it('user can UPDATE their own', function (done) {
+    it('user can update their own', function (done) {
       var new_content = faker.lorem.paragraph();
       user.agent
         .put('/submission/' + user_submission._id)
@@ -447,7 +446,7 @@ describe('/submission', function () {
         })
         .end(done);
     });
-    it('user can\'t UPDATE others', function (done) {
+    it('user can\'t update others', function (done) {
       var new_content = faker.lorem.paragraph();
       user.agent
         .put('/submission/' + admin_submission._id)
@@ -459,7 +458,7 @@ describe('/submission', function () {
         })
         .end(done);
     });
-    it('user can\'t UPDATE protected values', function (done) {
+    it('user can\'t update protected values', function (done) {
       user.agent
         .put('/submission/' + user_submission._id)
         .type('urlencoded')
@@ -472,7 +471,7 @@ describe('/submission', function () {
   });
 
   describe('REMOVE', function () {
-    it('admins can REMOVE a submission', function (done) {
+    it('admins can remove a submission', function (done) {
       user.agent
         .post('/submission')
         .send({ content: faker.lorem.paragraph() })
@@ -502,7 +501,180 @@ describe('/submission', function () {
 });
 
 describe('/feedback', function () {
-  
+  var a_feedback;
+  var a_submission;
+  var someone_elses_submission;
+  var someone_elses_feedback;
+
+  before('create a user submission to make feedback on', function (done) {
+    user.agent
+      .post('/submission')
+      .send({ content: faker.lorem.paragraph() })
+      .end(function (err, res) {
+        a_submission = res.body;
+        done(err);
+      });
+  });
+
+  before('create another user\'s submission to make feedback on', function (done) {
+    admin.agent
+      .post('/submission')
+      .send({ content: faker.lorem.paragraph() })
+      .end(function (err, res) {
+        someone_elses_submission = res.body;
+        done(err);
+      });
+  });
+
+  describe('CREATE', function () {
+    it('admin can create feedback', function (done) {
+      var content = faker.lorem.paragraph();
+      admin.agent
+        .post('/feedback')
+        .send({
+          content: content,
+          submission: a_submission._id,
+        })
+        .expect(function (res) {
+          res.body.should.have.property('content', content);
+          res.body.should.have.property('submission', a_submission._id);
+          a_feedback = res.body;
+        })
+        .end(done);
+    });
+    it('requires admin', function (done) {
+      user.agent
+        .post('/feedback')
+        .send({
+          content: faker.lorem.paragraph(),
+          submission: a_submission._id,
+        })
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
+        })
+        .end(done);
+    });
+    after('make other\'s feedback', function (done) {
+      admin.agent
+        .post('/feedback')
+        .send({
+          content: faker.lorem.paragraph(),
+          submission: someone_elses_submission._id,
+        })
+        .end(function (err, res) {
+          someone_elses_feedback = res.body;
+          done(err);
+        });
+    });
+  });
+
+  describe('GET', function () {
+    it('admins can get feedback', function (done) {
+      admin.agent
+        .get('/feedback/' + a_feedback._id)
+        .expect(function (res) {
+          res.body.should.containEql(_.omit(a_feedback, 'submission'));
+        })
+        .end(done);
+    });
+    it('users can get feedback that links to their own submissions', function (done) {
+      user.agent
+        .get('/feedback/' + a_feedback._id)
+        .expect(function (res) {
+          res.body.should.containEql(_.omit(a_feedback, 'submission'));
+        })
+        .end(done);
+    });
+    it('users can\'t get other\'s feedbacks', function (done) {
+      user.agent
+        .get('/feedback/' + someone_elses_feedback._id)
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
+        })
+        .end(done);
+    });
+  });
+
+  describe('FIND', function () {
+    it('users can find feedback that links to their own submissions', function (done) {
+      user.agent
+        .get('/feedback?conditions={"submission":"' + a_submission._id + '"}')
+        .expect(function (res) {
+          res.body.should.be.Array.with.length(1);
+          res.body[0].submission.owner.should.equal(user.credentials._id);
+        })
+        .end(done);
+    });
+    it('users can\'t find other\'s feedbacks', function (done) {
+      user.agent
+        .get('/feedback?conditions={"submission:":"' + someone_elses_submission._id + '"}')
+        .expect(function (res) {
+          res.body.should.be.Array.with.length(0);
+        })
+        .end(done);
+    });
+  });
+
+  describe('UPDATE', function () {
+    it('admins can update feedback', function (done) {
+      var new_content = faker.lorem.paragraph();
+      admin.agent
+        .put('/feedback/' + a_feedback._id)
+        .type('urlencoded')
+        .send({ content: new_content })
+        .expect(function (res) {
+          res.body.should.have.property('content', new_content);
+          a_feedback.content = new_content;
+        })
+        .end(done);
+    });
+    it('requires admin', function (done) {
+      var new_content = faker.lorem.paragraph();
+      user.agent
+        .put('/feedback/' + a_feedback._id)
+        .type('urlencoded')
+        .send({ content: new_content })
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
+        })
+        .end(done);
+    });
+  });
+
+  describe('REMOVE', function () {
+    it('admins can remove feedback', function (done) {
+      admin.agent
+        .del('/feedback/' + a_feedback._id)
+        .expect(function (res) {
+          res.body.should.eql(a_feedback);
+        })
+        .end(done);
+    });
+    it('requires admin', function (done) {
+      user.agent
+        .del('/feedback/' + someone_elses_feedback._id)
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
+        })
+        .end(done);
+    });
+  });
 });
 
 after('close database connection', function (done) {
