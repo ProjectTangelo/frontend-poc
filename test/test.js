@@ -190,84 +190,33 @@ describe('/user', function () {
   });
 
   describe('GET', function () {
-    // don't really need this since we have admin and user account by now...
-    // var count = 5;
-    // before('make some accounts', function (done) {
-    //   function makeUser (credentials) {
-    //     if (!credentials)
-    //       credentials = makeCredentials();
-    //     return new Promise(function (resolve, reject) {
-    //       admin.agent
-    //         .post('/user')
-    //         .send(credentials)
-    //         .end(function (err, res) {
-    //           if (err) reject(err);
-    //           resolve(res.body);
-    //         });
-    //     });
-    //   }
-    //   var promises = [];
-    //   for (var i = 0; i < count; i++)
-    //     promises.push(makeUser());
-    //   Promise
-    //     .all(promises)
-    //     .then(function () {
-    //       done();
-    //     });
-    // });
-    describe('multiple', function () {
-      it('admin can GET all users', function (done) {
-        admin.agent
-          .get('/user')
-          .expect(function (res) {
-            res.body.should.be.Array.with.length(2);
-            // res.body.should.containEql(_.omit(admin.credentials, 'password'));
-            res.body.should.containEql(_.omit(user.credentials, 'password'));
-          })
-          .end(done);
-      });
-      it('requires admin', function (done) {
-        user.agent
-          .get('/user')
-          .expect(function (res) {
-            res.body.should.eql({
-              error: {
-                message: 'Unauthorized',
-              }
-            });
-          })
-          .end(done);
-      });
+    it('admin can GET users', function (done) {
+      admin.agent
+        .get('/user/' + user.credentials._id)
+        .expect(function (res) {
+          res.body.should.eql(_.omit(user.credentials, 'password'));
+        })
+        .end(done);
     });
-    describe('single', function () {
-      it('admin can GET single users', function (done) {
-        admin.agent
-          .get('/user/' + user.credentials._id)
-          .expect(function (res) {
-            res.body.should.eql(_.omit(user.credentials, 'password'));
-          })
-          .end(done);
-      });
-      it('requires admin', function (done) {
-        user.agent
-          .get('/user/' + admin.credentials._id)
-          .expect(function (res) {
-            res.body.should.eql({
-              error: {
-                message: 'Unauthorized',
-              }
-            });
-          })
-          .end(done);
-      });
-      it('users can GET themselves', function (done) {
-        user.agent
-          .get('/user/' + user.credentials._id)
-          .expect(function (res) {
-            user.credentials.should.containEql(res.body);
-          })
-          .end(done);
-      });
+    it('requires admin', function (done) {
+      user.agent
+        .get('/user/' + admin.credentials._id)
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
+        })
+        .end(done);
+    });
+    it('users can GET themselves', function (done) {
+      user.agent
+        .get('/user/' + user.credentials._id)
+        .expect(function (res) {
+          user.credentials.should.containEql(res.body);
+        })
+        .end(done);
     });
   });
 
@@ -550,6 +499,10 @@ describe('/submission', function () {
         .end(done);
     });
   });
+});
+
+describe('/feedback', function () {
+  
 });
 
 after('close database connection', function (done) {
