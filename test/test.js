@@ -372,12 +372,11 @@ describe('/user', function () {
         });
     });
     it('requires admin', function (done) {
-      var new_user = makeCredentials();
       admin.agent
         .post('/user')
-        .send(new_user)
+        .send(makeCredentials())
         .end(function (err, res) {
-          _.extend(new_user, _.omit(res.body, 'password'));
+          var new_user = res.body;
           user.agent
             .del('/user/' + new_user._id)
             .expect(function (res) {
@@ -394,7 +393,8 @@ describe('/user', function () {
 });
 
 describe('/submission', function () {
-  var a_submission;
+  var user_submission;
+  var admin_submission;
 
   describe('CREATE', function () {
     it('users can CREATE submissions', function (done) {
@@ -405,42 +405,47 @@ describe('/submission', function () {
         .expect(function (res) {
           res.body.content.should.equal(content);
           res.body.owner.should.equal(user.credentials._id);
-          a_submission = res.body;
+          user_submission = res.body;
         })
         .end(done);
+    });
+    after('make an admin submission', function (done) {
+      var content = faker.lorem.paragraph();
+      admin.agent
+        .post('/submission')
+        .send({ content: content })
+        .end(function (err, res) {
+          if (err) throw err;
+          admin_submission = res.body;
+          done();
+        });
     });
   });
 
   describe('GET', function () {
-    it('users can GET their own submissions by its ID', function (done) {
+    it('users can GET their own submissions', function (done) {
       user.agent
-        .get('/submission/' + a_submission._id)
+        .get('/submission/' + user_submission._id)
         .expect(function (res) {
-          res.body.should.containEql(_.omit(a_submission, 'owner'));
+          res.body.should.containEql(_.omit(user_submission, 'owner'));
         })
         .end(done);
     });
     it('users can\'t GET other people\'s submissions', function (done) {
-      admin.agent
-        .post('/submission')
-        .send({ content: faker.lorem.paragraph() })
-        .end(function (err, res) {
-          var submission = res.body;
-          user.agent
-            .get('/submission/' + submission._id)
-            .expect(function (res) {
-              res.body.should.eql({
-                error: {
-                  message: 'Unauthorized',
-                }
-              });
-            })
-            .end(done);
-        });
+      user.agent
+        .get('/submission/' + admin_submission._id)
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
+        })
+        .end(done);
     });
-    it('owner field is populated', function (done) {
+    it('admin can get anyone\'s submission', function (done) {
       admin.agent
-        .get('/submission/' + a_submission._id)
+        .get('/submission/' + user_submission._id)
         .expect(function (res) {
           res.body.owner.should.be.eql(_.omit(user.credentials, 'password'));
         })
@@ -454,6 +459,93 @@ describe('/submission', function () {
         .get('/submission?conditions={"owner":"' + user.credentials._id + '"}')
         .expect(function (res) {
           res.body.should.be.Array.with.length(1);
+          res.body[0].owner.should.have.property('_id', user.credentials._id);
+        })
+        .end(done);
+    });
+    it('users can\'t FIND other user\'s submissions', function (done) {
+      user.agent
+        .get('/submission?conditions={"owner":"' + admin.credentials._id + '"}')
+        .expect(function (res) {
+          res.body.should.be.Array.with.length(0);
+        })
+        .end(done);
+    });
+  });
+
+  describe('UPDATE', function () {
+    it('admin can UPDATE anyone', function (done) {
+      var new_content = faker.lorem.paragraph();
+      admin.agent
+        .put('/submission/' + user_submission._id)
+        .type('urlencoded')
+        .send({ content: new_content })
+        .expect(function (res) {
+          res.body.should.have.property('content');
+          res.body.content.should.be.equal(new_content);
+        })
+        .end(done);
+    });
+    it('user can UPDATE their own', function (done) {
+      var new_content = faker.lorem.paragraph();
+      user.agent
+        .put('/submission/' + user_submission._id)
+        .type('urlencoded')
+        .send({ content: new_content })
+        .expect(function (res) {
+          res.body.should.have.property('content');
+          res.body.content.should.be.equal(new_content);
+        })
+        .end(done);
+    });
+    it('user can\'t UPDATE others', function (done) {
+      var new_content = faker.lorem.paragraph();
+      user.agent
+        .put('/submission/' + admin_submission._id)
+        .type('urlencoded')
+        .send({ content: new_content })
+        .expect(function (res) {
+          res.body.should.have.property('content');
+          res.body.content.should.be.equal(new_content);
+        })
+        .end(done);
+    });
+    it('user can\'t UPDATE protected values', function (done) {
+      user.agent
+        .put('/submission/' + user_submission._id)
+        .type('urlencoded')
+        .send({ owner: admin.credentials._id })
+        .expect(function (res) {
+          res.body.owner.should.not.be.equal(admin.credentials._id);
+        })
+        .end(done);
+    });
+  });
+
+  describe('REMOVE', function () {
+    it('admins can REMOVE a submission', function (done) {
+      user.agent
+        .post('/submission')
+        .send({ content: faker.lorem.paragraph() })
+        .end(function (err, res) {
+          var submission = res.body;
+          admin.agent
+            .del('/submission/' + submission._id)
+            .expect(function (res) {
+              res.body.should.have.property('_id');
+            })
+            .end(done);
+        });
+    });
+    it('requires admin', function (done) {
+      user.agent
+        .del('/submission/' + user_submission._id)
+        .expect(function (res) {
+          res.body.should.eql({
+            error: {
+              message: 'Unauthorized',
+            }
+          });
         })
         .end(done);
     });

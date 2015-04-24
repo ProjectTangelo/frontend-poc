@@ -52,27 +52,6 @@ function addOwner(hook, next) {
   //   });
 }
 
-function requireSelfOrAdmin (hook, next) {
-  if (hook.params.user.type === 'admin')
-    return next();
-
-  if (_.isArray(hook.result)) {
-    for (var i = 0; i < hook.result.length; i++)
-      if (hook.params.user._id.toString() !== hook.result[i]._doc.owner._id.toString())
-        return next({
-          message: 'Unauthorized',
-        });
-      return next();
-  }
-
-  if (hook.params.user._id.toString() === hook.result._doc.owner._id.toString())
-    return next();
-
-  next({
-    message: 'Unauthorized',
-  });
-}
-
 _.extend(service, {
   find: function (params, callback) {
     if (typeof params === 'function') {
@@ -108,8 +87,23 @@ _.extend(service, {
     remove: [hooks.requireAdmin],
   },
   after: {
-    get: [requireSelfOrAdmin],
-    find: [requireSelfOrAdmin],
+    get: [function authenticate (hook, next) {
+      if (hook.params.user.type === 'admin')
+        return next();
+      if (hook.params.user._id.toString() === hook.result.owner._id.toString())
+        return next();
+      next({
+        message: 'Unauthorized',
+      });
+    }],
+    find: [function filter (hook, next) {
+      if (hook.params.user.type !== 'admin' && hook.result) {
+        hook.result = _.filter(hook.result, function (submission) {
+          return submission.owner._id.toString() === hook.params.user._id.toString();
+        });
+      }
+      next();
+    }],
     create: [],
     update: [],
     remove: [],
