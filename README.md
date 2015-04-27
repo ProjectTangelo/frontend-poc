@@ -27,6 +27,15 @@ Once you have downloaded the repository and submodules and installed all package
 ```bash
 npm start
 ```
+#### Stop
+```bash
+npm stop
+```
+
+#### Restart
+```bash
+npm restart
+```
 
 ## Testing
 Testing available via the npm test script
