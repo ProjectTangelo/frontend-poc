@@ -558,6 +558,15 @@ describe('/feedback', function () {
         })
         .end(done);
     });
+    it('should be populated on /submission GET', function (done) {
+      user.agent
+        .get('/submission/' + a_submission._id)
+        .expect(function (res) {
+          res.body.should.have.property('feedback')
+          res.body.feedback.should.be.Array.with.length(1);
+        })
+        .end(done);
+    });
     after('make other\'s feedback', function (done) {
       admin.agent
         .post('/feedback')
@@ -586,6 +595,17 @@ describe('/feedback', function () {
         .get('/feedback/' + a_feedback._id)
         .expect(function (res) {
           res.body.should.containEql(_.omit(a_feedback, 'submission'));
+        })
+        .end(done);
+    });
+    it('populates the submission field', function (done) {
+      admin.agent
+        .get('/feedback/' + a_feedback._id)
+        .expect(function (res) {
+          res.body.should.have.property('submission')
+          a_submission.__v = res.body.submission.__v;
+          a_submission.feedback = res.body.submission.feedback;
+          res.body.submission.should.eql(a_submission);
         })
         .end(done);
     });
@@ -659,6 +679,15 @@ describe('/feedback', function () {
         .del('/feedback/' + a_feedback._id)
         .expect(function (res) {
           res.body.should.eql(a_feedback);
+        })
+        .end(done);
+    });
+    it('should have depopulated the submission it was a part of', function (done) {
+      admin.agent
+        .get('/submission/' + a_submission._id)
+        .expect(function (res) {
+          res.body.should.have.property('feedback')
+          res.body.feedback.should.be.Array.with.length(0);
         })
         .end(done);
     });
