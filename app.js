@@ -13,6 +13,7 @@ var app = this.app = feathers();
 
 var passport = app.passport = require('passport');
 var mongoose = app.mongoose = require('mongoose');
+// maybe put this in an .init()
 mongoose.connect('mongodb://localhost/tangelo');
 mongoose.connection.on('error', function (err) {
   winston.debug(err);

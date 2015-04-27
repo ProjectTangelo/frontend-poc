@@ -40,7 +40,8 @@
     "npm": ">=1.3.14"
   },
   "scripts": {
-    "start": "sudo node ./bin/tangelo.js",
+    "start": "sudo ./node_modules/.bin/pm2 start ./bin/tangelo.js -i 0 -n tangelo",
+    "stop": "sudo ./node_modules/.bin/pm2 delete tangelo",
     "test": "sudo ./node_modules/.bin/gulp test"
   },
   "repository": {
