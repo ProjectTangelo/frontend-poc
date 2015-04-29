@@ -42,7 +42,7 @@
   },
   "scripts": {
     "start": "sudo ./node_modules/.bin/pm2 start ./bin/tangelo.js -i 0 -n tangelo",
-    "stop": "sudo ./node_modules/.bin/pm2 delete tangelo",
+    "stop": "sudo ./node_modules/.bin/pm2 kill",
     "test": "sudo ./node_modules/.bin/gulp test"
   },
   "repository": {
