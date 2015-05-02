@@ -13,7 +13,8 @@ app.get('/', function (req, res) {
   }
   else {
     // TODO - csrf
-    res.render('login');
+    // res.render('login');
+    res.sendFile(__dirname + '/public/login.html');
   }
 });
 
